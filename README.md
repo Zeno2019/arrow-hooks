@@ -1,40 +1,44 @@
 # Arrow Hooks
 
-一个现代化的 React Hooks 工具库，提供了一系列实用的自定义 Hooks。使用 TypeScript 编写，基于 Vite 构建。
+一个实用的 React Hooks 集合。
 
-## 技术栈
+## 特性
 
-- ⚛️ React 18+
-- 📦 Vite
-- ✅ Vitest
-- 🔷 TypeScript
-- 📘 完整类型定义
-- 🚀 完全支持 ESM
-- ⚡️ 极致轻量
+- 🎯 专注于实用性
+- 📦 基于 Vite 构建
+- ✅ Vitest 单元测试
+- 🔷 TypeScript 支持
+- 🚀 支持 ESM
+- ⚙️ 目前仅支持客户端渲染（SSR 支持正在计划中）
 
 ## 安装
 
 ```bash
-# pnpm
+# pnpm (推荐)
 pnpm add arrow-hooks
 
 # npm
 npm install arrow-hooks
+```
 
-# yarn
-yarn add arrow-hooks
+## 项目结构
+
+```
+src/
+  hooks/                # hooks 目录
+    useKeyboardEvent/   # 每个 hook 都是独立的目录
+      index.ts         # hook 实现
+      __tests__/       # 测试文件夹
+        index.test.ts  # 测试文件
+      example/         # 示例文件夹
+        index.tsx      # 示例组件
+  App.tsx              # 示例入口
+  index.ts             # 库入口
 ```
 
 ## 使用方法
 
-```typescript
-import { useExample } from 'arrow-hooks';
-
-function MyComponent() {
-  const result = useExample();
-  return <div>{result}</div>;
-}
-```
+启动后查看未注释示例
 
 ## 开发
 
@@ -42,34 +46,22 @@ function MyComponent() {
 # 安装依赖
 pnpm install
 
-# 开发模式
+# 运行示例
 pnpm dev
 
 # 运行测试
 pnpm test
 
-# 测试覆盖率
-pnpm coverage
-
-# 类型检查
-pnpm type-check
-
 # 构建
 pnpm build
 ```
 
-## 项目结构
+## 注意事项
 
-```
-arrow-hooks/
-├── src/
-│   ├── hooks/       # hooks 源码
-│   ├── __tests__/   # 测试文件
-│   └── index.ts     # 入口文件
-├── examples/        # 使用示例
-├── dist/           # 构建输出
-└── ...配置文件
-```
+- 当前版本暂不支持服务端渲染（SSR）
+- 后续版本将添加 SSR 支持
+- 所有的 hooks 都经过单元测试验证
 
-## 许可
-本项目遵循 MIT 许可证 - 详情请参阅 LICENSE 文件。
+## License
+
+MIT
