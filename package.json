@@ -6,51 +6,54 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
-    }
-  },
   "files": [
     "dist"
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
+    "build": "tsc && vite build",
     "test": "vitest",
-    "coverage": "vitest run --coverage",
-    "lint": "eslint src --ext .ts,.tsx",
-    "type-check": "tsc --noEmit"
+    "lint": "eslint src --ext .ts,.tsx"
   },
   "keywords": [
     "react",
     "hooks",
-    "typescript"
+    "typescript",
+    "react-hooks",
+    "custom-hooks"
   ],
-  "author": "",
+  "author": "Zeno_St",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zeno2019/arrow-hooks.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Zeno2019/arrow-hooks/issues"
+  },
+  "homepage": "https://github.com/Zeno2019/arrow-hooks#readme",
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^14.1.2",
+    "@types/node": "^22.10.2",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.2.0",
+    "@vitest/coverage-v8": "^1.0.0",
     "eslint": "^8.0.0",
+    "jsdom": "^23.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "terser": "^5.26.0",
     "typescript": "^5.0.0",
     "vite": "^5.0.0",
     "vite-plugin-dts": "^3.0.0",
-    "vitest": "^1.0.0",
-    "@vitest/coverage-v8": "^1.0.0",
-    "jsdom": "^23.0.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "vitest": "^1.0.0"
   }
 }

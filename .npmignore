@@ -1,0 +1,32 @@
+# Source
+src/
+examples/
+
+# Tests
+__tests__/
+coverage/
+*.test.ts
+*.test.tsx
+
+# Config files
+.eslintrc
+.prettierrc
+tsconfig.json
+vite.config.ts
+
+# Development
+node_modules/
+.git/
+.gitignore
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
