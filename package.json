@@ -7,20 +7,24 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "test": "vitest",
-    "lint": "eslint src --ext .ts,.tsx"
+    "lint": "eslint src --ext .ts,.tsx",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "react",
     "hooks",
     "typescript",
     "react-hooks",
-    "custom-hooks"
+    "custom-hooks",
+    "utilities"
   ],
   "author": "Zeno_St",
   "license": "MIT",
