@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import useKeyboardEvent from '../hooks/useKeyboardEvent';
+import useKeyboardEvent from '../index';
 
 describe('useKeyboardEvent', () => {
   afterEach(() => {
@@ -11,7 +11,6 @@ describe('useKeyboardEvent', () => {
     const handler = vi.fn();
     renderHook(() => useKeyboardEvent('keydown', handler));
 
-    // 模拟键盘事件
     const event = new KeyboardEvent('keydown', { key: 'Enter' });
     window.dispatchEvent(event);
 
@@ -22,12 +21,10 @@ describe('useKeyboardEvent', () => {
     const handler = vi.fn();
     renderHook(() => useKeyboardEvent('keydown', handler, 'Enter'));
 
-    // 应该调用处理函数（按下 Enter 键）
     const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
     window.dispatchEvent(enterEvent);
     expect(handler).toHaveBeenCalled();
 
-    // 不应该调用处理函数（按下其他键）
     const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape' });
     window.dispatchEvent(escapeEvent);
     expect(handler).toHaveBeenCalledTimes(1);
