@@ -24,7 +24,7 @@ const getWindowSize = (): WindowSize => {
 /**
  * 用于监听和获取窗口大小
  * @param delay - 防抖延迟时间（毫秒），默认为 200ms
- * @returns { WindowSize } 当前窗口的宽度和高度
+ * @returns { WindowSize } - 当前窗口的宽度和高度
  */
 const useWindowSize = (delay = 200): WindowSize => {
   const [size, setSize] = useState(getWindowSize);
