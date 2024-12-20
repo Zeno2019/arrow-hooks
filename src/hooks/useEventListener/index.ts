@@ -1,25 +1,38 @@
 import { useEffect, useRef } from 'react';
 import { isBrowser } from '../../util';
 
-type EventType = keyof WindowEventMap | keyof DocumentEventMap | keyof HTMLElementEventMap;
-type EventElement = Window | Document | HTMLElement | null;
+type EventMap = WindowEventMap & DocumentEventMap & HTMLElementEventMap;
+type EventType = keyof EventMap;
+type ElementType = Window | Document | HTMLElement;
 
-export default function useEventListener<K extends EventType>(eventType: K, callback: (e: Event) => void, element: EventElement = window) {
-  // 使用 ref 存储回调函数，避免因回调函数变化而重新添加事件监听
-  const callbackRef = useRef(callback);
+/**
+ * React hook 用于处理类型安全的 DOM 事件
+ * @param eventType -要监听的事件类型
+ * @param handler -事件处理函数
+ * @param element -将事件附加到的元素（默认为窗口）
+ */
+const useEventListener = <K extends EventType>(
+  eventType: K,
+  handler: (event: EventMap[K]) => void,
+  element: ElementType = window
+) => {
+  const savedHandler = useRef(handler);
 
-  // 更新 callbackRef
   useEffect(() => {
-    callbackRef.current = callback;
-  }, [callback]);
+    savedHandler.current = handler;
+  }, [handler]);
 
   useEffect(() => {
-    if (!isBrowser) return;
-    if (element == null) return;
+    const isSupported = element && element.addEventListener;
+    if (!isSupported || !isBrowser) return;
 
-    const handler = (e: Event) => callbackRef.current(e);
-    element.addEventListener(eventType, handler);
+    const eventListener = (event: Event) => savedHandler.current(event as EventMap[K]);
+    element.addEventListener(eventType, eventListener);
 
-    return () => element.removeEventListener(eventType, handler);
+    return () => {
+      element.removeEventListener(eventType, eventListener);
+    };
   }, [eventType, element]);
-}
+};
+
+export default useEventListener;
