@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import KeyboardEventExample from './hooks/useKeyboardEvent/example';
 import EventListenerExample from './hooks/useEventListener/example';
 import WindowSizeExample from './hooks/useWindowSize/example';
+import HoverExample from './hooks/useHover/example';
 
 function App() {
   return (
@@ -12,7 +13,8 @@ function App() {
         {/* Uncomment the example you want to see */}
         {/* <KeyboardEventExample /> */}
         {/* <EventListenerExample /> */}
-        <WindowSizeExample />
+        {/* <WindowSizeExample /> */}
+        <HoverExample />
         {/* Add more examples here */}
       </div>
     </div>
