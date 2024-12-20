@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import KeyboardEventExample from './hooks/useKeyboardEvent/example';
 import EventListenerExample from './hooks/useEventListener/example';
+import WindowSizeExample from './hooks/useWindowSize/example';
 
 function App() {
   return (
@@ -10,7 +11,8 @@ function App() {
       <div style={{ marginTop: '2rem' }}>
         {/* Uncomment the example you want to see */}
         {/* <KeyboardEventExample /> */}
-        <EventListenerExample />
+        {/* <EventListenerExample /> */}
+        <WindowSizeExample />
         {/* Add more examples here */}
       </div>
     </div>
