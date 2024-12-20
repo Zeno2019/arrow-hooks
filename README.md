@@ -1,6 +1,7 @@
 # Arrow Hooks
 
-> 一个实用的 React Hooks 集合。
+> 一个实用的 React Hooks 集合
+> A collection of practical React hooks with TypeScript support
 
 [中文](#中文) | [English](#english)
 
