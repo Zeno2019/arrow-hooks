@@ -1,6 +1,6 @@
 {
   "name": "arrow-hooks",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A collection of practical React hooks with TypeScript support.",
   "type": "module",
   "main": "./dist/index.cjs",
