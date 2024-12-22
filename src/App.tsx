@@ -4,6 +4,7 @@ import KeyboardEventExample from './hooks/useKeyboardEvent/example';
 import EventListenerExample from './hooks/useEventListener/example';
 import WindowSizeExample from './hooks/useWindowSize/example';
 import HoverExample from './hooks/useHover/example';
+import ResizeObserverExample from './hooks/useResizeObserver/example';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         {/* <EventListenerExample /> */}
         {/* <WindowSizeExample /> */}
         <HoverExample />
+        <ResizeObserverExample />
         {/* Add more examples here */}
       </div>
     </div>
