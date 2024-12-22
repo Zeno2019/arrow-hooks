@@ -5,6 +5,7 @@ import EventListenerExample from './hooks/useEventListener/example';
 import WindowSizeExample from './hooks/useWindowSize/example';
 import HoverExample from './hooks/useHover/example';
 import ResizeObserverExample from './hooks/useResizeObserver/example';
+import IntersectionObserverExample from './hooks/useIntersectionObserver/example';
 
 function App() {
   return (
@@ -15,8 +16,9 @@ function App() {
         {/* <KeyboardEventExample /> */}
         {/* <EventListenerExample /> */}
         {/* <WindowSizeExample /> */}
-        <HoverExample />
-        <ResizeObserverExample />
+        {/* <HoverExample /> */}
+        {/* <ResizeObserverExample /> */}
+        <IntersectionObserverExample />
         {/* Add more examples here */}
       </div>
     </div>
