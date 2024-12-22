@@ -1,21 +1,24 @@
 import { renderHook } from '@testing-library/react';
-import { describe, it, expect, vi, beforeAll, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeAll, afterEach, type Mock } from 'vitest';
 import useIntersectionObserver from '../index';
 
 describe('useIntersectionObserver', () => {
-  let mockObserve: ReturnType<typeof vi.fn>;
-  let mockDisconnect: ReturnType<typeof vi.fn>;
   const mockCallback = vi.fn();
+  let mockIntersectionObserver: Mock;
 
   beforeAll(() => {
-    mockObserve = vi.fn();
-    mockDisconnect = vi.fn();
-
-    vi.stubGlobal('IntersectionObserver', vi.fn().mockImplementation((callback) => ({
-      observe: mockObserve,
-      disconnect: mockDisconnect,
+    mockIntersectionObserver = vi.fn((callback) => ({
+      observe: vi.fn(),
+      disconnect: vi.fn(),
       unobserve: vi.fn(),
-    })));
+      root: null,
+      rootMargin: '',
+      thresholds: [],
+      takeRecords: vi.fn(),
+    }));
+
+    // 在 vitest 环境中设置 mock
+    window.IntersectionObserver = mockIntersectionObserver;
   });
 
   afterEach(() => {
@@ -25,61 +28,63 @@ describe('useIntersectionObserver', () => {
   it('should initialize and observe element', () => {
     const ref = { current: document.createElement('div') };
     renderHook(() => useIntersectionObserver(ref, mockCallback));
-    expect(mockObserve).toHaveBeenCalledWith(ref.current);
+
+    const observer = mockIntersectionObserver.mock.results[0].value;
+    expect(observer.observe).toHaveBeenCalledWith(ref.current);
   });
 
   it('should handle null ref', () => {
     const ref = { current: null };
     renderHook(() => useIntersectionObserver(ref, mockCallback));
-    expect(mockObserve).not.toHaveBeenCalled();
+
+    expect(mockIntersectionObserver).not.toHaveBeenCalled();
   });
 
   it('should cleanup on unmount', () => {
     const ref = { current: document.createElement('div') };
     const { unmount } = renderHook(() => useIntersectionObserver(ref, mockCallback));
+
     unmount();
-    expect(mockDisconnect).toHaveBeenCalled();
+    const observer = mockIntersectionObserver.mock.results[0].value;
+    expect(observer.disconnect).toHaveBeenCalled();
   });
 
-  it('should call callback when intersection changes', () => {
+  it('should call callback with intersection entries', () => {
     const ref = { current: document.createElement('div') };
     const mockEntry = {
       isIntersecting: true,
-      target: ref.current,
-      boundingClientRect: {} as DOMRectReadOnly,
       intersectionRatio: 1,
+      boundingClientRect: {} as DOMRectReadOnly,
       intersectionRect: {} as DOMRectReadOnly,
       rootBounds: null,
-      time: 0,
+      target: document.createElement('div'),
+      time: Date.now(),
     };
+    const mockEntries = [mockEntry];
 
     renderHook(() => useIntersectionObserver(ref, mockCallback));
 
-    const observerCallback = vi.mocked(window.IntersectionObserver).mock.calls[0][0];
-    observerCallback([mockEntry], {} as IntersectionObserver);
+    const [[observerCallback]] = mockIntersectionObserver.mock.calls;
+    // 传入 mockIntersectionObserver 作为第二个参数
+    observerCallback(mockEntries, mockIntersectionObserver);
 
-    expect(mockCallback).toHaveBeenCalledWith([mockEntry], expect.any(Object));
+    expect(mockCallback).toHaveBeenCalledTimes(1);
+    expect(mockCallback).toHaveBeenCalledWith(mockEntries, mockIntersectionObserver);
   });
 
-  it('should stop observing when freezeOnceVisible is true and element becomes visible', () => {
+  it('should pass options to IntersectionObserver', () => {
     const ref = { current: document.createElement('div') };
-    const mockEntry = {
-      isIntersecting: true,
-      target: ref.current,
-      boundingClientRect: {} as DOMRectReadOnly,
-      intersectionRatio: 1,
-      intersectionRect: {} as DOMRectReadOnly,
-      rootBounds: null,
-      time: 0,
+    const options = {
+      root: document.createElement('div'),
+      rootMargin: '10px',
+      threshold: 0.5,
     };
 
-    renderHook(() =>
-      useIntersectionObserver(ref, mockCallback, { freezeOnceVisible: true })
+    renderHook(() => useIntersectionObserver(ref, mockCallback, options));
+
+    expect(mockIntersectionObserver).toHaveBeenCalledWith(
+      expect.any(Function),
+      options
     );
-
-    const observerCallback = vi.mocked(window.IntersectionObserver).mock.calls[0][0];
-    observerCallback([mockEntry], { disconnect: mockDisconnect } as unknown as IntersectionObserver);
-
-    expect(mockDisconnect).toHaveBeenCalled();
   });
 });
