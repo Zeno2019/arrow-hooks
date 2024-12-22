@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { describe, it, expect, vi, beforeAll, afterEach, type Mock } from 'vitest';
+import { describe, it, expect, vi, beforeAll, afterAll, afterEach, type Mock } from 'vitest';
 import useIntersectionObserver from '../index';
 
 describe('useIntersectionObserver', () => {
@@ -17,8 +17,12 @@ describe('useIntersectionObserver', () => {
       takeRecords: vi.fn(),
     }));
 
-    // 在 vitest 环境中设置 mock
-    window.IntersectionObserver = mockIntersectionObserver;
+    vi.stubGlobal('IntersectionObserver', mockIntersectionObserver);
+  });
+
+  afterAll(() => {
+    // 测试结束后恢复原始的 IntersectionObserver
+    vi.unstubAllGlobals();
   });
 
   afterEach(() => {

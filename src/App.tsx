@@ -6,6 +6,7 @@ import WindowSizeExample from './hooks/useWindowSize/example';
 import HoverExample from './hooks/useHover/example';
 import ResizeObserverExample from './hooks/useResizeObserver/example';
 import IntersectionObserverExample from './hooks/useIntersectionObserver/example';
+import InfinityScrollExample from './hooks/useInfiniteScroll/example';
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
         {/* <WindowSizeExample /> */}
         {/* <HoverExample /> */}
         {/* <ResizeObserverExample /> */}
-        <IntersectionObserverExample />
+        <InfinityScrollExample />
+        {/* <IntersectionObserverExample /> */}
         {/* Add more examples here */}
       </div>
     </div>

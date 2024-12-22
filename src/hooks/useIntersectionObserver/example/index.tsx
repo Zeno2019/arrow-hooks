@@ -6,21 +6,15 @@ const IntersectionObserverExample = () => {
     <div>
       <h2>Intersection Observer Examples</h2>
 
-      {/* 无限滚动示例 */}
-      <section style={{ marginBottom: '2rem' }}>
-        <h3>1. 无限滚动</h3>
-        <InfiniteScrollExample />
-      </section>
-
       {/* 元素可见性跟踪示例 */}
       <section>
-        <h3>2. 元素可见性跟踪</h3>
+        <h3>1. 元素可见性跟踪</h3>
         <VisibilityTrackingExample />
       </section>
 
       {/* 图片懒加载示例 */}
       <section style={{ marginBottom: '2rem' }}>
-        <h3>3. 图片懒加载</h3>
+        <h3>2. 图片懒加载</h3>
         <LazyImageExample />
       </section>
     </div>
@@ -60,42 +54,6 @@ const LazyImageExample = () => {
             opacity: isLoaded ? 1 : 0,
           }}
         />
-      </div>
-    </div>
-  );
-};
-
-// 无限滚动组件
-const InfiniteScrollExample = () => {
-  const [items, setItems] = useState<number[]>(Array.from({ length: 10 }, (_, i) => i));
-  const loaderRef = useRef<HTMLDivElement>(null);
-
-  const handleIntersect = useCallback((entries: IntersectionObserverEntry[]) => {
-    const entry = entries[0];
-
-    if (entry.isIntersecting) {
-      setItems(prev => [...prev, ...Array.from({ length: 5 }, (_, i) => prev.length + i)]);
-    }
-  }, []);
-
-  useIntersectionObserver(loaderRef, handleIntersect);
-
-  return (
-    <div style={{ maxHeight: '300px', overflow: 'auto', border: '1px solid #ccc' }}>
-      {items.map(item => (
-        <div
-          key={item}
-          style={{
-            padding: '1rem',
-            borderBottom: '1px solid #eee',
-            backgroundColor: '#fff',
-          }}
-        >
-          Item {item + 1}
-        </div>
-      ))}
-      <div ref={loaderRef} style={{ padding: '1rem', textAlign: 'center' }}>
-        Loading more...
       </div>
     </div>
   );
