@@ -9,11 +9,11 @@ type ResizeCallback = (entry: ResizeObserverEntry) => void;
  * @param callback - 尺寸变化时的回调函数
  * @param options - ResizeObserver 的配置选项
  */
-function useResizeObserver<T extends HTMLElement>(
+const useResizeObserver = <T extends HTMLElement>(
   ref: React.RefObject<T>,
   callback: ResizeCallback,
   options?: ResizeObserverOptions
-): void {
+): void => {
   const observerRef = useRef<ResizeObserver>();
 
   useEffect(() => {
