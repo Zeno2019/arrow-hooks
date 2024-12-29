@@ -8,6 +8,7 @@ import ResizeObserverExample from './hooks/useResizeObserver/example';
 import IntersectionObserverExample from './hooks/useIntersectionObserver/example';
 import InfinityScrollExample from './hooks/useInfiniteScroll/example';
 import MediaQueryExample from './hooks/useMediaQuery/example';
+import CookieExample from './hooks/useCookie/example'
 
 function App() {
   return (
@@ -21,8 +22,9 @@ function App() {
         {/* <HoverExample /> */}
         {/* <ResizeObserverExample /> */}
         {/* <InfinityScrollExample /> */}
-        <MediaQueryExample />
+        {/* <MediaQueryExample /> */}
         {/* <IntersectionObserverExample /> */}
+        <CookieExample />
         {/* Add more examples here */}
       </div>
     </div>
