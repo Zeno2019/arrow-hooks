@@ -9,6 +9,8 @@ on:
 jobs:
   check-version:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read  # 需要读权限来访问 git 历史
     outputs:
       version-changed: ${{ steps.check.outputs.changed }}
       new-version: ${{ steps.check.outputs.version }}
@@ -47,7 +49,7 @@ jobs:
     if: needs.check-version.outputs.version-changed == 'true'
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write  # 需要写权限来创建 tags
       id-token: write
 
     steps:
