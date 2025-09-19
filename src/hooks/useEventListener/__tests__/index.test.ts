@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import useEventListener from '../index';
 
 describe('useEventListener', () => {
@@ -49,7 +49,9 @@ describe('useEventListener', () => {
     const handler1 = vi.fn();
     const handler2 = vi.fn();
 
-    const { rerender } = renderHook(({ handler }) => useEventListener('click', handler), { initialProps: { handler: handler1 } });
+    const { rerender } = renderHook(({ handler }) => useEventListener('click', handler), {
+      initialProps: { handler: handler1 },
+    });
 
     // 使用第一个处理函数触发事件
     window.dispatchEvent(new Event('click'));

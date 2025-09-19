@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { describe, it, expect, vi, beforeAll, afterAll, afterEach, type Mock } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it, type Mock, vi } from 'vitest';
 import useIntersectionObserver from '../index';
 
 describe('useIntersectionObserver', () => {
@@ -86,9 +86,6 @@ describe('useIntersectionObserver', () => {
 
     renderHook(() => useIntersectionObserver(ref, mockCallback, options));
 
-    expect(mockIntersectionObserver).toHaveBeenCalledWith(
-      expect.any(Function),
-      options
-    );
+    expect(mockIntersectionObserver).toHaveBeenCalledWith(expect.any(Function), options);
   });
 });

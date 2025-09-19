@@ -9,7 +9,11 @@ type KeyboardEventType = 'keydown' | 'keyup' | 'keypress';
  * @param targetKey -可选的特定按键来监听
  * @returns {void} - 无
  */
-const useKeyboardEvent = (eventType: KeyboardEventType, handler: (event: KeyboardEvent) => void, targetKey?: string): void => {
+const useKeyboardEvent = (
+  eventType: KeyboardEventType,
+  handler: (event: KeyboardEvent) => void,
+  targetKey?: string,
+): void => {
   useEventListener(eventType, ((e: KeyboardEvent) => {
     if (targetKey && e.key !== targetKey) {
       return;

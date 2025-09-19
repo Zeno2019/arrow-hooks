@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { act } from 'react';
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import useHover from '../index';
 
 describe('useHover', () => {
@@ -38,7 +38,7 @@ describe('useHover', () => {
   it('should cleanup event listeners on unmount', () => {
     const element = document.createElement('div');
     const ref = { current: element };
-    
+
     const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
     const { unmount } = renderHook(() => useHover(ref));
 

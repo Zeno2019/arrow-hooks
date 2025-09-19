@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { describe, it, expect, vi, beforeAll, afterEach, type Mock } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, type Mock, vi } from 'vitest';
 import useResizeObserver from '../index';
 
 describe('useResizeObserver', () => {

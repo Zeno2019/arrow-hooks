@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { act } from 'react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import useWindowSize from '../index';
 
 describe('useWindowSize', () => {
@@ -105,9 +105,6 @@ describe('useWindowSize', () => {
       unmount();
     });
 
-    expect(removeEventListenerSpy).toHaveBeenCalledWith(
-      'resize',
-      expect.any(Function)
-    );
+    expect(removeEventListenerSpy).toHaveBeenCalledWith('resize', expect.any(Function));
   });
 });

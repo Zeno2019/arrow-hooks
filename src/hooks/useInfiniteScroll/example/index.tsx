@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import useInfiniteScroll from '../index';
 
 interface Item {
@@ -12,20 +12,19 @@ const InfinityScrollExample = () => {
   const loaderRef = useRef<HTMLDivElement>(null);
 
   const loadMoreItems = useCallback(async () => {
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
     const newItems = Array.from({ length: 10 }, (_, i) => ({
       id: items.length + i,
-      content: `Item ${items.length + i + 1}`
+      content: `Item ${items.length + i + 1}`,
     }));
 
-    setItems(prev => [...prev, ...newItems]);
+    setItems((prev) => [...prev, ...newItems]);
 
     // 模拟数据上限为 50 条
     if (items.length + newItems.length >= 50) {
       setHasMore(false);
     }
-
   }, [items.length]);
 
   const isLoading = useInfiniteScroll(loaderRef, loadMoreItems, {
@@ -38,7 +37,7 @@ const InfinityScrollExample = () => {
     <div>
       <h2>Infinite Scroll Example</h2>
       <div style={{ maxHeight: '400px', overflow: 'auto' }}>
-        {items.map(item => (
+        {items.map((item) => (
           <div
             key={item.id}
             style={{
@@ -53,13 +52,7 @@ const InfinityScrollExample = () => {
         ))}
 
         <div ref={loaderRef} style={{ padding: '20px', textAlign: 'center' }}>
-          {isLoading ? (
-            'Loading more items...'
-          ) : hasMore ? (
-            'Scroll for more'
-          ) : (
-            'No more items'
-          )}
+          {isLoading ? 'Loading more items...' : hasMore ? 'Scroll for more' : 'No more items'}
         </div>
       </div>
     </div>

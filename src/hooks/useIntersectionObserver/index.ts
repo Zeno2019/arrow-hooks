@@ -1,4 +1,4 @@
-import { RefObject, useEffect } from 'react';
+import { type RefObject, useEffect } from 'react';
 
 export interface UseIntersectionObserverOptions extends IntersectionObserverInit {
   freezeOnceVisible?: boolean; // 是否在元素首次进入视口时就停止观察
@@ -14,10 +14,12 @@ export interface UseIntersectionObserverOptions extends IntersectionObserverInit
 const useIntersectionObserver = (
   elementRef: RefObject<Element>,
   callback: IntersectionObserverCallback,
-  options: UseIntersectionObserverOptions = {}
+  options: UseIntersectionObserverOptions = {},
 ): void => {
-  const { freezeOnceVisible = false, // 如果设置了 freezeOnceVisible 且元素已经可见，则停止观察
-    ...observerOptions } = options;
+  const {
+    freezeOnceVisible = false, // 如果设置了 freezeOnceVisible 且元素已经可见，则停止观察
+    ...observerOptions
+  } = options;
 
   useEffect(() => {
     const element = elementRef.current;

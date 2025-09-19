@@ -12,7 +12,11 @@ export type ElementType = Window | Document | HTMLElement;
  * @param element -将事件附加到的元素（默认为窗口）
  * @returns { void } - 无
  */
-const useEventListener = <K extends EventType>(eventType: K, handler: (event: EventMap[K]) => void, element: ElementType = window): void => {
+const useEventListener = <K extends EventType>(
+  eventType: K,
+  handler: (event: EventMap[K]) => void,
+  element: ElementType = window,
+): void => {
   const savedHandler = useRef(handler);
 
   useEffect(() => {
@@ -20,7 +24,7 @@ const useEventListener = <K extends EventType>(eventType: K, handler: (event: Ev
   }, [handler]);
 
   useEffect(() => {
-    const isSupported = element && element.addEventListener;
+    const isSupported = element?.addEventListener;
     if (!isSupported || !isBrowser) return;
 
     const eventListener = (event: Event) => savedHandler.current(event as EventMap[K]);

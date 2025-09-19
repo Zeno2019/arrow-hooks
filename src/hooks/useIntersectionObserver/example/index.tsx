@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import useIntersectionObserver from '../index';
 
 const IntersectionObserverExample = () => {
@@ -26,16 +26,19 @@ const LazyImageExample = () => {
   const imageRef = useRef<HTMLImageElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const handleIntersect = useCallback((entries: IntersectionObserverEntry[]) => {
-    const entry = entries[0];
+  const handleIntersect = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const entry = entries[0];
 
-    if (entry.isIntersecting && !isLoaded) {
-      if (imageRef.current) {
-        imageRef.current.src = 'https://picsum.photos/800/400';
-        setIsLoaded(true);
+      if (entry.isIntersecting && !isLoaded) {
+        if (imageRef.current) {
+          imageRef.current.src = 'https://picsum.photos/800/400';
+          setIsLoaded(true);
+        }
       }
-    }
-  }, [isLoaded]);
+    },
+    [isLoaded],
+  );
 
   useIntersectionObserver(imageRef, handleIntersect);
 
@@ -45,7 +48,7 @@ const LazyImageExample = () => {
       <div style={{ minHeight: '400px' }}>
         <img
           ref={imageRef}
-          alt="Lazy loaded"
+          alt='Lazy loaded'
           style={{
             width: '100%',
             height: '400px',
@@ -89,9 +92,7 @@ const VisibilityTrackingExample = () => {
         }}
       >
         <h4 style={{ margin: 0 }}>观察元素</h4>
-        <p style={{ margin: '0.5rem 0 0' }}>
-          状态: {isVisible ? '✨ 可见' : '🔲 不可见'}
-        </p>
+        <p style={{ margin: '0.5rem 0 0' }}>状态: {isVisible ? '✨ 可见' : '🔲 不可见'}</p>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import useResizeObserver from '../index';
 
 const ResizeObserverExample = () => {
@@ -17,14 +17,14 @@ const ResizeObserverExample = () => {
   return (
     <div>
       <h2>ResizeObserver Example</h2>
-      
+
       <div style={{ marginBottom: '1rem' }}>
         <label>
           调整宽度：
           <input
-            type="range"
-            min="200"
-            max="600"
+            type='range'
+            min='200'
+            max='600'
             value={width}
             onChange={(e) => setWidth(Number(e.target.value))}
           />

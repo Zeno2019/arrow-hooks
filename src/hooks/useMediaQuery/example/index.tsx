@@ -14,7 +14,7 @@ const MediaQueryExample = () => {
       <div style={{ marginBottom: '2rem' }}>
         <h3>Screen Size</h3>
         <p>
-          Large Screen (≥1024px): {' '}
+          Large Screen (≥1024px):{' '}
           <strong style={{ color: isLargeScreen ? '#52c41a' : '#ff4d4f' }}>
             {isLargeScreen ? 'Yes' : 'No'}
           </strong>
@@ -24,7 +24,7 @@ const MediaQueryExample = () => {
       <div style={{ marginBottom: '2rem' }}>
         <h3>System Theme</h3>
         <p>
-          Dark Mode: {' '}
+          Dark Mode:{' '}
           <strong style={{ color: isDarkMode ? '#52c41a' : '#ff4d4f' }}>
             {isDarkMode ? 'Enabled' : 'Disabled'}
           </strong>
@@ -34,7 +34,7 @@ const MediaQueryExample = () => {
       <div style={{ marginBottom: '2rem' }}>
         <h3>Print Mode</h3>
         <p>
-          Print Media: {' '}
+          Print Media:{' '}
           <strong style={{ color: isPrint ? '#52c41a' : '#ff4d4f' }}>
             {isPrint ? 'Active' : 'Inactive'}
           </strong>
@@ -44,7 +44,7 @@ const MediaQueryExample = () => {
       <div>
         <h3>Accessibility</h3>
         <p>
-          Reduced Motion: {' '}
+          Reduced Motion:{' '}
           <strong style={{ color: prefersReducedMotion ? '#52c41a' : '#ff4d4f' }}>
             {prefersReducedMotion ? 'Enabled' : 'Disabled'}
           </strong>

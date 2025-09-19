@@ -12,7 +12,7 @@ type ResizeCallback = (entry: ResizeObserverEntry) => void;
 const useResizeObserver = <T extends HTMLElement>(
   ref: React.RefObject<T>,
   callback: ResizeCallback,
-  options?: ResizeObserverOptions
+  options?: ResizeObserverOptions,
 ): void => {
   const observerRef = useRef<ResizeObserver>();
 
@@ -37,6 +37,6 @@ const useResizeObserver = <T extends HTMLElement>(
       }
     };
   }, [ref, callback, options]);
-}
+};
 
 export default useResizeObserver;

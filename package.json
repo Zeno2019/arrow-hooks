@@ -1,6 +1,6 @@
 {
   "name": "arrow-hooks",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "A collection of practical React hooks with TypeScript support.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -23,8 +23,13 @@
     "build": "tsc && vite build",
     "test": "vitest run",
     "type-check": "tsc --noEmit",
-    "lint": "eslint src --ext .ts,.tsx",
-    "prepublishOnly": "npm run build"
+    "lint": "biome lint src/",
+    "lint:fix": "biome lint --write src/",
+    "format": "biome format src/",
+    "format:fix": "biome format --write src/",
+    "check": "biome check src/",
+    "check:fix": "biome check --write src/",
+    "prepublishOnly": "pnpm run build"
   },
   "keywords": [
     "react",
@@ -49,6 +54,7 @@
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.2.4",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^14.1.2",
     "@types/node": "^22.10.2",
@@ -67,5 +73,6 @@
     "vite": "^5.0.0",
     "vite-plugin-dts": "^3.0.0",
     "vitest": "^1.0.0"
-  }
+  },
+  "packageManager": "pnpm@10.14.0+sha512.ad27a79641b49c3e481a16a805baa71817a04bbe06a38d17e60e2eaee83f6a146c6a688125f5792e48dd5ba30e7da52a5cda4c3992b9ccf333f9ce223af84748"
 }

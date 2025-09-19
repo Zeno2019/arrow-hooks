@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { debounce, isBrowser } from '../../util';
 import useEventListener from '../useEventListener';
-import { isBrowser, debounce } from '../../util';
 
 type WindowSize = {
   width: number;
@@ -33,7 +33,7 @@ const useWindowSize = (delay = 200): WindowSize => {
     debounce(() => {
       setSize(getWindowSize());
     }, delay),
-    [delay]
+    [delay],
   );
 
   useEffect(() => {

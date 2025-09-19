@@ -1,6 +1,6 @@
-import { RefObject, useCallback, useState } from 'react';
-import useIntersectionObserver from '../useIntersectionObserver';
+import { type RefObject, useCallback, useState } from 'react';
 import { debounce } from '../../util';
+import useIntersectionObserver from '../useIntersectionObserver';
 
 export interface UseInfiniteScrollOptions extends IntersectionObserverInit {
   hasMore?: boolean;
@@ -18,7 +18,7 @@ export interface UseInfiniteScrollOptions extends IntersectionObserverInit {
 const useInfiniteScroll = (
   targetRef: RefObject<Element>,
   onLoadMore: () => Promise<void> | void,
-  options: UseInfiniteScrollOptions = {}
+  options: UseInfiniteScrollOptions = {},
 ): boolean => {
   const {
     threshold = 0.5,
@@ -34,11 +34,7 @@ const useInfiniteScroll = (
     debounce(async (entries: IntersectionObserverEntry[]) => {
       const [entry] = entries;
 
-      if (
-        entry?.isIntersecting &&
-        !loading &&
-        hasMore
-      ) {
+      if (entry?.isIntersecting && !loading && hasMore) {
         setLoading(true);
 
         try {
@@ -49,17 +45,13 @@ const useInfiniteScroll = (
       }
     }, delay),
 
-    [loading, hasMore, onLoadMore]
+    [loading, hasMore, onLoadMore],
   );
 
-  useIntersectionObserver(
-    targetRef,
-    handleIntersect,
-    {
-      threshold,
-      rootMargin,
-    }
-  );
+  useIntersectionObserver(targetRef, handleIntersect, {
+    threshold,
+    rootMargin,
+  });
 
   return loading;
 };

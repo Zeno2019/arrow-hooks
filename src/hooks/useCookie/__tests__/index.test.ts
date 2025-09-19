@@ -1,26 +1,25 @@
 import { renderHook } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import useCookie from '../index';
 import { act } from 'react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import useCookie from '../index';
 
 describe('useCookie', () => {
   let consoleWarnSpy: any;
 
   beforeEach(() => {
     // 清除所有 cookie
-    document.cookie.split(';').forEach(cookie => {
+    document.cookie.split(';').forEach((cookie) => {
       const [key] = cookie.split('=');
       document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     });
 
     // 监听 console.warn
-    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { });
+    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
   afterEach(() => {
     consoleWarnSpy.mockRestore();
   });
-
 
   it('should return default value when cookie is not set', () => {
     const { result } = renderHook(() => useCookie('test', 'default'));
@@ -65,13 +64,13 @@ describe('useCookie', () => {
         path: '/',
         maxAge: 3600,
         secure: true,
-        SameSite: 'Strict'
+        SameSite: 'Strict',
       });
     });
 
     // 验证 cookie 设置调用
     expect(cookieSetter).toHaveBeenCalledWith(
-      expect.stringMatching(/test=hello.*path=\/.*max-age=3600.*secure.*SameSite=Strict/)
+      expect.stringMatching(/test=hello.*path=\/.*max-age=3600.*secure.*SameSite=Strict/),
     );
 
     cookieSetter.mockRestore();
@@ -88,7 +87,6 @@ describe('useCookie', () => {
     expect(result.current[0]).toBe(specialValue);
   });
 
-
   it('should warn when removing non-existent cookie in development', () => {
     const originalEnv = process.env.NODE_ENV;
     process.env.NODE_ENV = 'development';
@@ -100,7 +98,7 @@ describe('useCookie', () => {
     });
 
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      '[useCookie] Attempting to remove non-existent cookie: nonexistent'
+      '[useCookie] Attempting to remove non-existent cookie: nonexistent',
     );
 
     process.env.NODE_ENV = originalEnv;
@@ -113,7 +111,7 @@ describe('useCookie', () => {
     act(() => {
       result.current[1]('value', {
         path: '/test',
-        domain: 'example.com'
+        domain: 'example.com',
       });
     });
 
@@ -121,7 +119,7 @@ describe('useCookie', () => {
     act(() => {
       result.current[2]({
         path: '/test',
-        domain: 'example.com'
+        domain: 'example.com',
       });
     });
 

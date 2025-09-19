@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import useEventListener from '../index';
 
 const EventListenerExample = () => {
@@ -21,7 +21,7 @@ const EventListenerExample = () => {
     () => {
       setClicks((prev) => prev + 1);
     },
-    buttonRef.current ?? undefined
+    buttonRef.current ?? undefined,
   );
 
   return (
@@ -43,7 +43,8 @@ const EventListenerExample = () => {
             padding: '0.5rem 1rem',
             fontSize: '1rem',
             cursor: 'pointer',
-          }}>
+          }}
+        >
           点击我 ({clicks} 次)
         </button>
       </div>

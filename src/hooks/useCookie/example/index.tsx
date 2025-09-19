@@ -127,11 +127,11 @@ const ExpirationCookieExample = () => {
         <h4 style={{ margin: '0 0 1rem 0' }}>
           登录状态: <strong>{isLoggedIn ? '已登录' : '未登录'}</strong>
         </h4>
-        
+
         <div style={{ marginBottom: '1rem' }}>
           <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <input
-              type="checkbox"
+              type='checkbox'
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
             />
@@ -198,21 +198,16 @@ const AdvancedCookieExample = () => {
     });
   };
 
-
   return (
     <div>
-      <p>当前 Cookie 值: <strong>{cookie || '未设置'}</strong></p>
+      <p>
+        当前 Cookie 值: <strong>{cookie || '未设置'}</strong>
+      </p>
       <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-        <button
-          onClick={handleSetSecureCookie}
-          style={{ padding: '0.5rem 1rem' }}
-        >
+        <button onClick={handleSetSecureCookie} style={{ padding: '0.5rem 1rem' }}>
           设置安全 Cookie
         </button>
-        <button
-          onClick={() => removeCookie()}
-          style={{ padding: '0.5rem 1rem' }}
-        >
+        <button onClick={() => removeCookie()} style={{ padding: '0.5rem 1rem' }}>
           删除 Cookie
         </button>
       </div>

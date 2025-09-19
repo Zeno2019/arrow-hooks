@@ -1,13 +1,13 @@
 import { renderHook } from '@testing-library/react';
 import { act } from 'react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import useMediaQuery from '../index';
 
 describe('useMediaQuery', () => {
   const originalMatchMedia = window.matchMedia;
   let mediaQueryCallbacks: ((e: MediaQueryListEvent) => void)[] = [];
 
-  const createMatchMedia = (initialMatches: boolean) => 
+  const createMatchMedia = (initialMatches: boolean) =>
     vi.fn().mockImplementation((query: string) => ({
       matches: initialMatches,
       media: query,
@@ -46,9 +46,9 @@ describe('useMediaQuery', () => {
 
     // 触发媒体查询变化
     act(() => {
-      mediaQueryCallbacks.forEach(callback => 
-        callback({ matches: true, media: '(min-width: 1024px)' } as MediaQueryListEvent)
-      );
+      mediaQueryCallbacks.forEach((callback) => {
+        callback({ matches: true, media: '(min-width: 1024px)' } as MediaQueryListEvent);
+      });
     });
 
     expect(result.current).toBe(true);
@@ -80,7 +80,7 @@ describe('useMediaQuery', () => {
       if (legacyHandler) {
         legacyHandler.call(
           { matches: true } as MediaQueryList,
-          { matches: true } as MediaQueryListEvent
+          { matches: true } as MediaQueryListEvent,
         );
       }
     });

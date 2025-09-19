@@ -47,13 +47,11 @@ const HoverExample = () => {
           }}
         ></div>
         <h4 style={{ margin: '0 0 1rem 0' }}>交互式卡片</h4>
-        <p style={{ margin: 0, color: '#666' }}>
-          悬停时会有阴影和上移效果
-        </p>
+        <p style={{ margin: 0, color: '#666' }}>悬停时会有阴影和上移效果</p>
       </div>
 
       {/* 按钮示例 */}
-      < div >
+      <div>
         <h3>按钮状态</h3>
         <button
           ref={buttonRef}
@@ -70,9 +68,8 @@ const HoverExample = () => {
         >
           {isButtonHovered ? '松开点击！' : '悬停试试'}
         </button>
-      </div >
-
-    </div >
+      </div>
+    </div>
   );
 };
 
