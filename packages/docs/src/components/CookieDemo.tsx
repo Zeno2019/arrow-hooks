@@ -1,48 +1,86 @@
-import { useState } from 'react'
-import { useCookie } from 'arrow-hooks'
+'use client';
+import { useCookie } from 'arrow-hooks';
+import { useEffect, useState } from 'react';
 
 export function CookieDemo() {
-  const [value, setCookie, removeCookie] = useCookie('demo-cookie', 'default-value')
-  const [inputValue, setInputValue] = useState('')
+  const [value, setCookie, removeCookie] = useCookie('demo-cookie', 'default-value');
+  const [inputValue, setInputValue] = useState('');
+  const [mounted, setMounted] = useState(false);
+
+  // 确保组件挂载后才显示动态内容
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // 避免水合不匹配，在未挂载时显示静态内容
+  if (!mounted) {
+    return (
+      <div className='p-6 border rounded-lg bg-muted/50'>
+        <h4 className='font-semibold mb-4'>useCookie 演示</h4>
+        <div className='space-y-4'>
+          <div>
+            <label className='text-sm font-medium'>当前 Cookie 值:</label>
+            <p className='text-lg font-mono bg-background p-2 rounded border'>正在加载...</p>
+          </div>
+          <div className='flex gap-2'>
+            <input
+              type='text'
+              value=''
+              placeholder='输入新的 Cookie 值'
+              className='flex-1 px-3 py-2 border rounded'
+              disabled
+              readOnly
+            />
+            <button
+              className='px-4 py-2 bg-primary text-primary-foreground rounded opacity-50'
+              disabled
+            >
+              设置
+            </button>
+          </div>
+          <button className='px-4 py-2 border rounded opacity-50' disabled>
+            删除 Cookie
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 border rounded-lg bg-muted/50">
-      <h4 className="font-semibold mb-4">useCookie 演示</h4>
+    <div className='p-6 border rounded-lg bg-muted/50'>
+      <h4 className='font-semibold mb-4'>useCookie 演示</h4>
 
-      <div className="space-y-4">
+      <div className='space-y-4'>
         <div>
-          <label className="text-sm font-medium">当前 Cookie 值:</label>
-          <p className="text-lg font-mono bg-background p-2 rounded border">
+          <label className='text-sm font-medium'>当前 Cookie 值:</label>
+          <p className='text-lg font-mono bg-background p-2 rounded border'>
             {value || '(未设置)'}
           </p>
         </div>
 
-        <div className="flex gap-2">
+        <div className='flex gap-2'>
           <input
-            type="text"
+            type='text'
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="输入新的 Cookie 值"
-            className="flex-1 px-3 py-2 border rounded"
+            placeholder='输入新的 Cookie 值'
+            className='flex-1 px-3 py-2 border rounded'
           />
           <button
             onClick={() => {
-              setCookie(inputValue)
-              setInputValue('')
+              setCookie(inputValue);
+              setInputValue('');
             }}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
+            className='px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90'
           >
             设置
           </button>
         </div>
 
-        <button
-          onClick={() => removeCookie()}
-          className="px-4 py-2 border rounded hover:bg-muted"
-        >
+        <button onClick={() => removeCookie()} className='px-4 py-2 border rounded hover:bg-muted'>
           删除 Cookie
         </button>
       </div>
     </div>
-  )
+  );
 }

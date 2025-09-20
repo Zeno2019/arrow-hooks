@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
 import { Router } from 'waku/router/client'
+import './styles/globals.css'
 
 declare global {
   var __WAKU_HYDRATE__: boolean | undefined

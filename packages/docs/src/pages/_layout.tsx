@@ -1,15 +1,7 @@
+import { Provider } from '@/components/provider';
+import type { ReactNode } from 'react';
+
 // 根布局组件
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html>
-      <head>
-        <meta charSet='utf-8' />
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
-        <title>Arrow Hooks - React Hooks Library</title>
-      </head>
-      <body>
-        {children}
-      </body>
-    </html>
-  );
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return <Provider>{children}</Provider>;
 }
