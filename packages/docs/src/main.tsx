@@ -2,14 +2,20 @@ import { StrictMode } from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
 import { Router } from 'waku/router/client'
 
+declare global {
+  var __WAKU_HYDRATE__: boolean | undefined
+}
+
 const rootElement = (
   <StrictMode>
     <Router />
   </StrictMode>
 )
 
-if (globalThis.__WAKU_HYDRATE__) {
-  hydrateRoot(document, rootElement)
-} else {
-  createRoot(document).render(rootElement)
+const container = document.getElementById('root')
+
+if (globalThis.__WAKU_HYDRATE__ && container) {
+  hydrateRoot(container, rootElement)
+} else if (container) {
+  createRoot(container).render(rootElement)
 }

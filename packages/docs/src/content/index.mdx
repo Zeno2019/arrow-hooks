@@ -1,0 +1,51 @@
+---
+title: Arrow Hooks
+description: A collection of practical React hooks with TypeScript support
+---
+
+# Arrow Hooks
+
+欢迎使用 Arrow Hooks - 一个实用的 React Hooks 库，提供完整的 TypeScript 支持。
+
+## 特性
+
+- 🎯 **TypeScript 优先** - 完整的类型定义和推断
+- ⚡ **轻量高效** - 零依赖，体积小巧
+- 🔧 **开箱即用** - 简单易用的 API 设计
+- 🛡️ **SSR 友好** - 支持服务端渲染
+
+## Hook 列表
+
+### 状态管理
+- [useCookie](/docs/hooks/use-cookie) - 操作浏览器 Cookie
+
+### DOM 操作
+- [useHover](/docs/hooks/use-hover) - 检测元素悬停状态
+- [useWindowSize](/docs/hooks/use-window-size) - 监听窗口尺寸变化
+
+## 安装
+
+```bash
+npm install arrow-hooks
+# 或
+pnpm add arrow-hooks
+```
+
+## 快速开始
+
+```tsx
+import { useCookie } from 'arrow-hooks'
+
+function App() {
+  const [theme, setTheme] = useCookie('theme', 'light')
+
+  return (
+    <div>
+      <p>当前主题: {theme}</p>
+      <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+        切换主题
+      </button>
+    </div>
+  )
+}
+```

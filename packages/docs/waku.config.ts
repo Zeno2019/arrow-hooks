@@ -1,5 +1,9 @@
+import mdx from 'fumadocs-mdx/vite';
 import { defineConfig } from 'waku/config';
+import * as MdxConfig from './source.config';
 
 export default defineConfig({
-  // Waku 会自动使用 tsconfig.json 中的路径映射
+  vite: {
+    plugins: [mdx(MdxConfig)],
+  },
 });

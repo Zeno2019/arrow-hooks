@@ -3,10 +3,11 @@
   "compilerOptions": {
     "noEmit": true,
     "baseUrl": ".",
+    "moduleResolution": "bundler",
     "paths": {
       "arrow-hooks": ["../core/src"],
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", ".source.ts"]
 }
