@@ -1,0 +1,79 @@
+---
+title: useCookie
+description: 用于操作浏览器 Cookie 的 React Hook
+---
+
+# useCookie
+
+用于操作浏览器 Cookie 的 React Hook，提供类型安全的 Cookie 读写功能。
+
+## 基本用法
+
+```tsx
+import { useCookie } from 'arrow-hooks'
+
+function App() {
+  const [value, setCookie, removeCookie] = useCookie('user-preference', 'default')
+
+  return (
+    <div>
+      <p>当前值: {value}</p>
+      <button onClick={() => setCookie('new-value')}>
+        更新 Cookie
+      </button>
+      <button onClick={() => removeCookie()}>
+        删除 Cookie
+      </button>
+    </div>
+  )
+}
+```
+
+## 实时演示
+
+<CookieDemo />
+
+## API 参考
+
+### 参数
+
+| 参数 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| key | string | - | Cookie 的键名 |
+| defaultValue | string \| undefined | undefined | 默认值 |
+
+### 返回值
+
+返回一个包含三个元素的数组：
+
+| 索引 | 类型 | 描述 |
+|------|------|------|
+| 0 | string \| undefined | 当前 Cookie 值 |
+| 1 | function | 设置 Cookie 的函数 |
+| 2 | function | 删除 Cookie 的函数 |
+
+### setCookie 选项
+
+```tsx
+setCookie(value, {
+  path: '/',           // Cookie 路径
+  expires: 7,          // 过期时间（天数）
+  domain: '.example.com', // 域名
+  secure: true,        // 仅 HTTPS
+  SameSite: 'Strict'   // SameSite 策略
+})
+```
+
+## 特性
+
+- ✅ TypeScript 支持
+- ✅ SSR 安全（服务端渲染时不会报错）
+- ✅ 自动序列化/反序列化
+- ✅ 完整的 Cookie 选项支持
+- ✅ 开发模式警告
+
+## 注意事项
+
+- 在服务端渲染环境下，`useCookie` 将返回默认值
+- Cookie 值会自动进行 URI 编码/解码
+- 删除 Cookie 时会自动设置过期时间为过去时间

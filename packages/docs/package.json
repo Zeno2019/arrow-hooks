@@ -1,0 +1,24 @@
+{
+  "name": "@arrow-hooks/docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "waku dev",
+    "build": "waku build",
+    "preview": "waku preview"
+  },
+  "dependencies": {
+    "waku": "^0.20.0",
+    "fumadocs-ui": "^13.0.0",
+    "fumadocs-core": "^13.0.0",
+    "fumadocs-mdx": "^10.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "arrow-hooks": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.0.0"
+  }
+}
