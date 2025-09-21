@@ -8,7 +8,6 @@
     "preview": "waku preview"
   },
   "dependencies": {
-    "@mdx-js/react": "^3.1.1",
     "@types/mdx": "^2.0.13",
     "arrow-hooks": "workspace:*",
     "fumadocs-core": "^15.7.13",
@@ -20,6 +19,7 @@
     "waku": "^0.26.1"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.13",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "autoprefixer": "^10.4.21",
