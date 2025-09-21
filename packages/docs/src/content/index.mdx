@@ -5,30 +5,49 @@ description: A collection of practical React hooks with TypeScript support
 
 # Arrow Hooks
 
-欢迎使用 Arrow Hooks - 一个实用的 React Hooks 库，提供完整的 TypeScript 支持。
+> 一个实用的 React Hooks 集合，专注于提供高质量、类型安全的 React Hooks
 
 ## 特性
 
-- 🎯 **TypeScript 优先** - 完整的类型定义和推断
-- ⚡ **轻量高效** - 零依赖，体积小巧
-- 🔧 **开箱即用** - 简单易用的 API 设计
-- 🛡️ **SSR 友好** - 支持服务端渲染
+- 🎯 **专注于实用性** - 都是实际开发中高频常见的功能需求
+- 📦 **基于 Vite 构建** - 快速的开发体验和优化的构建输出
+- ✅ **Vitest 单元测试** - 所有 Hook 都经过完整的单元测试验证
+- 🔷 **TypeScript 支持** - 完整的类型定义和类型推断
+- 🚀 **ESM 支持** - 现代化的模块系统，支持 Tree Shaking
+- ⚙️ **客户端优先** - 目前专注于客户端渲染（SSR 支持正在计划中）
 
 ## Hook 列表
 
 ### 状态管理
-- [useCookie](/hooks/use-cookie) - 操作浏览器 Cookie
+- [useCookie](/hooks/use-cookie) - 操作浏览器 Cookie 的 Hook
 
 ### DOM 操作
 - [useHover](/hooks/use-hover) - 检测元素悬停状态
 - [useWindowSize](/hooks/use-window-size) - 监听窗口尺寸变化
+- [useResizeObserver](/hooks/use-resize-observer) - 使用 ResizeObserver API 监听元素尺寸变化
+
+### 事件处理
+- [useEventListener](/hooks/use-event-listener) - 简化事件监听器的管理
+- [useKeyboardEvent](/hooks/use-keyboard-event) - 处理键盘事件
+
+### 交互观察
+- [useIntersectionObserver](/hooks/use-intersection-observer) - 使用 Intersection Observer API
+- [useInfiniteScroll](/hooks/use-infinite-scroll) - 无限滚动功能
+
+### 媒体查询
+- [useMediaQuery](/hooks/use-media-query) - 响应式媒体查询
 
 ## 安装
 
 ```bash
-npm install arrow-hooks
-# 或
+# pnpm (推荐)
 pnpm add arrow-hooks
+
+# npm
+npm install arrow-hooks
+
+# yarn
+yarn add arrow-hooks
 ```
 
 ## 快速开始
@@ -49,3 +68,11 @@ function App() {
   )
 }
 ```
+
+## 开发理念
+
+Arrow Hooks 专注于：
+- **实用性优先** - 收录在实际项目高频率场景的 Hook
+- **质量保证** - 每个 Hook 都有较完整的测试覆盖
+- **类型安全** - 提供完整的 TypeScript 支持
+- **开箱即用** - 简单的 API 设计，即插即用

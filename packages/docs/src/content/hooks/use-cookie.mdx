@@ -5,7 +5,7 @@ description: 用于操作浏览器 Cookie 的 React Hook
 
 # useCookie
 
-用于操作浏览器 Cookie 的 React Hook，提供类型安全的 Cookie 读写功能。
+用于操作浏览器 Cookie 的 React Hook，提供类型安全的 Cookie 读写功能，支持完整的 Cookie 选项配置。
 
 ## 在线演示
 
@@ -33,6 +33,131 @@ function App() {
 }
 ```
 
+## 使用场景
+
+### 1. 主题切换
+
+保存用户的主题偏好，页面刷新后保持设置：
+
+```tsx
+import { useCookie } from 'arrow-hooks'
+
+function ThemeSwitcher() {
+  const [theme, setTheme, removeTheme] = useCookie('theme', 'light')
+  const isDark = theme === 'dark'
+
+  const toggleTheme = () => {
+    setTheme(isDark ? 'light' : 'dark')
+  }
+
+  const resetTheme = () => {
+    removeTheme()
+  }
+
+  return (
+    <div style={{
+      backgroundColor: isDark ? '#333' : '#fff',
+      color: isDark ? '#fff' : '#333',
+      padding: '2rem'
+    }}>
+      <h4>当前主题: {theme}</h4>
+      <button onClick={toggleTheme}>
+        切换到{isDark ? '浅色' : '深色'}主题
+      </button>
+      <button onClick={resetTheme}>
+        重置主题
+      </button>
+    </div>
+  )
+}
+```
+
+### 2. 设置过期时间
+
+根据用户选择设置不同的过期时间：
+
+```tsx
+import { useCookie } from 'arrow-hooks'
+import { useState } from 'react'
+
+function LoginStatus() {
+  const [loginState, setLoginState, removeLoginState] = useCookie('login-status')
+  const [rememberMe, setRememberMe] = useState(false)
+  const isLoggedIn = loginState === 'logged-in'
+
+  const handleLogin = () => {
+    const expirationOptions = {
+      // 根据"记住我"选项设置不同的过期时间
+      expires: new Date(Date.now() + (rememberMe ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000)), // 7天 或 24小时
+      path: '/',
+    }
+
+    setLoginState('logged-in', expirationOptions)
+  }
+
+  const handleLogout = () => {
+    removeLoginState()
+  }
+
+  return (
+    <div>
+      <h4>登录状态: {isLoggedIn ? '已登录' : '未登录'}</h4>
+
+      <label>
+        <input
+          type="checkbox"
+          checked={rememberMe}
+          onChange={(e) => setRememberMe(e.target.checked)}
+        />
+        记住登录状态（7天）
+      </label>
+
+      <p>{rememberMe ? '登录状态将保持7天' : '登录状态将在24小时后过期'}</p>
+
+      <button onClick={handleLogin} disabled={isLoggedIn}>
+        登录
+      </button>
+      <button onClick={handleLogout} disabled={!isLoggedIn}>
+        退出登录
+      </button>
+    </div>
+  )
+}
+```
+
+### 3. 高级选项配置
+
+配置安全选项，适用于生产环境：
+
+```tsx
+import { useCookie } from 'arrow-hooks'
+
+function SecureCookieExample() {
+  const [cookie, setCookie, removeCookie] = useCookie('secure-data')
+
+  const handleSetSecureCookie = () => {
+    setCookie('sensitive-data', {
+      secure: true,        // 仅在 HTTPS 下传输
+      SameSite: 'Strict',  // 严格的 SameSite 策略
+      path: '/',           // 整个域名下可访问
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7天后过期
+    })
+  }
+
+  return (
+    <div>
+      <p>当前 Cookie 值: {cookie || '未设置'}</p>
+      <button onClick={handleSetSecureCookie}>
+        设置安全 Cookie
+      </button>
+      <button onClick={() => removeCookie()}>
+        删除 Cookie
+      </button>
+    </div>
+  )
+}
+```
+
 ## API 参考
 
 ### 参数
@@ -40,7 +165,7 @@ function App() {
 | 参数 | 类型 | 默认值 | 描述 |
 |------|------|--------|------|
 | key | string | - | Cookie 的键名 |
-| defaultValue | string \| undefined | undefined | 默认值 |
+| defaultValue | string \| undefined | undefined | 默认值，当 Cookie 不存在时返回 |
 
 ### 返回值
 
@@ -49,31 +174,52 @@ function App() {
 | 索引 | 类型 | 描述 |
 |------|------|------|
 | 0 | string \| undefined | 当前 Cookie 值 |
-| 1 | function | 设置 Cookie 的函数 |
-| 2 | function | 删除 Cookie 的函数 |
+| 1 | (value: string \| null, options?: CookieOptions) => void | 设置 Cookie 的函数 |
+| 2 | (options?: CookieOptions) => void | 删除 Cookie 的函数 |
 
-### setCookie 选项
+### CookieOptions 接口
 
 ```tsx
-setCookie(value, {
-  path: '/',           // Cookie 路径
-  expires: 7,          // 过期时间（天数）
-  domain: '.example.com', // 域名
-  secure: true,        // 仅 HTTPS
-  SameSite: 'Strict'   // SameSite 策略
-})
+interface CookieOptions {
+  path?: string                    // Cookie 路径，默认为当前路径
+  expires?: number | Date          // 过期时间，number 表示毫秒数，Date 表示具体时间
+  maxAge?: number                  // 最大存活时间（秒）
+  domain?: string                  // 域名
+  secure?: boolean                 // 是否仅在 HTTPS 下传输
+  SameSite?: 'Strict' | 'Lax' | 'None'  // SameSite 策略
+}
 ```
 
-## 特性
+### 使用示例
 
-- ✅ TypeScript 支持
-- ✅ SSR 安全（服务端渲染时不会报错）
-- ✅ 自动序列化/反序列化
-- ✅ 完整的 Cookie 选项支持
-- ✅ 开发模式警告
+```tsx
+// 设置简单的 Cookie
+setCookie('value')
+
+// 设置带选项的 Cookie
+setCookie('value', {
+  path: '/',
+  expires: new Date('2024-12-31'),
+  secure: true,
+  SameSite: 'Strict'
+})
+
+// 设置过期时间（7天后）
+setCookie('value', {
+  expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+})
+
+// 删除 Cookie
+removeCookie()
+
+// 删除指定路径的 Cookie
+removeCookie({ path: '/admin' })
+```
 
 ## 注意事项
 
-- 在服务端渲染环境下，`useCookie` 将返回默认值
-- Cookie 值会自动进行 URI 编码/解码
-- 删除 Cookie 时会自动设置过期时间为过去时间
+- **服务端渲染**：在 SSR 环境下，`useCookie` 将返回 `defaultValue`，不会访问 `document.cookie`
+- **自动编码**：Cookie 值会自动进行 URI 编码/解码，支持中文等特殊字符
+- **删除机制**：删除 Cookie 时会自动设置过期时间为过去时间
+- **开发提示**：在开发模式下，尝试删除不存在的 Cookie 会显示警告
+- **安全选项**：`secure` 和 `SameSite` 选项在本地开发环境可能不生效，在生产环境中正常工作
