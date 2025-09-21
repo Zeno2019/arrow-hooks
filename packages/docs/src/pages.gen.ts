@@ -4,15 +4,14 @@
 import type { PathsForPages, GetConfigResponse } from 'waku/router';
 
 // prettier-ignore
-import type { getConfig as File_DocsSlug_getConfig } from './pages/docs/[...slug]';
+import type { getConfig as File_Slug_getConfig } from './pages/[...slug]';
 // prettier-ignore
-import type { getConfig as File_DocsIndex_getConfig } from './pages/docs/index';
+import type { getConfig as File_Index_getConfig } from './pages/index';
 
 // prettier-ignore
 type Page =
-| ({ path: '/docs/[...slug]' } & GetConfigResponse<typeof File_DocsSlug_getConfig>)
-| ({ path: '/docs' } & GetConfigResponse<typeof File_DocsIndex_getConfig>)
-| { path: '/'; render: 'dynamic' };
+| ({ path: '/[...slug]' } & GetConfigResponse<typeof File_Slug_getConfig>)
+| ({ path: '/' } & GetConfigResponse<typeof File_Index_getConfig>);
 
 // prettier-ignore
 declare module 'waku/router' {

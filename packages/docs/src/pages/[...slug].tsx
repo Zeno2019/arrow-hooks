@@ -1,22 +1,31 @@
 import { loader } from 'fumadocs-core/source';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import type { ReactNode } from 'react';
+import defaultMdxComponents from 'fumadocs-ui/mdx';
+import { DocsBody, DocsPage } from 'fumadocs-ui/page';
+import * as Examples from '@/components/examples';
 import { create, docs } from '~/source.generated';
 
 // 创建异步 source
 const createSource = async () => {
   return loader({
     source: await create.sourceAsync(docs.doc, docs.meta),
-    baseUrl: '/docs',
+    baseUrl: '/',
   });
 };
 
-interface LayoutProps {
-  children: ReactNode;
+interface DocsPageProps {
+  slug: string[];
 }
 
-export default async function Layout({ children }: LayoutProps) {
+export default async function DocPage({ slug }: DocsPageProps) {
   const source = await createSource();
+  const page = source.getPage(slug);
+
+  if (!page) {
+    throw new Error('Page not found');
+  }
+
+  const MDX = page.data.body;
 
   return (
     <DocsLayout
@@ -26,7 +35,11 @@ export default async function Layout({ children }: LayoutProps) {
         url: '/',
       }}
     >
-      {children}
+      <DocsPage toc={page.data.toc}>
+        <DocsBody>
+          <MDX components={{ ...defaultMdxComponents, ...Examples }} />
+        </DocsBody>
+      </DocsPage>
     </DocsLayout>
   );
 }
