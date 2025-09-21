@@ -1,7 +1,7 @@
 import { loader } from 'fumadocs-core/source';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
-import { create, docs } from '../../../source.generated';
+import { create, docs } from '@/../source.generated';
 import * as Examples from '@/components/examples';
 
 // 创建异步 source
@@ -29,7 +29,6 @@ export default async function DocPage({ slug }: DocsPageProps) {
   return (
     <DocsPage toc={page.data.toc}>
       <DocsBody>
-        <h1>{page.data.title}</h1>
         <MDX components={{ ...defaultMdxComponents, ...Examples }} />
       </DocsBody>
     </DocsPage>

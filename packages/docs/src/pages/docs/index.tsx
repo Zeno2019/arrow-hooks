@@ -1,6 +1,6 @@
 import { loader } from 'fumadocs-core/source';
-import { DocsPage, DocsBody } from 'fumadocs-ui/page';
-import { create, docs } from '../../../source.generated';
+import { DocsBody, DocsPage } from 'fumadocs-ui/page';
+import { create, docs } from '@/../source.generated';
 
 // 创建异步 source
 const createSource = async () => {
@@ -23,7 +23,6 @@ export default async function DocsIndexPage() {
   return (
     <DocsPage toc={page.data.toc}>
       <DocsBody>
-        <h1>{page.data.title}</h1>
         <MDX />
       </DocsBody>
     </DocsPage>
