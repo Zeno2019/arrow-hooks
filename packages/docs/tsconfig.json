@@ -5,9 +5,19 @@
     "baseUrl": ".",
     "moduleResolution": "bundler",
     "paths": {
-      "arrow-hooks": ["../core/src"],
-      "@/*": ["./src/*"]
+      "arrow-hooks": [
+        "../core/src"
+      ],
+      "@/*": [
+        "./src/*"
+      ],
+      "~/*": [
+        "./*"
+      ]
     }
   },
-  "include": ["src/**/*", ".source.ts"]
+  "include": [
+    "src/**/*",
+    ".source.ts"
+  ]
 }

@@ -1,7 +1,7 @@
 import { loader } from 'fumadocs-core/source';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import type { ReactNode } from 'react';
-import { create, docs } from '../../../source.generated';
+import { create, docs } from '~/source.generated';
 
 // 创建异步 source
 const createSource = async () => {

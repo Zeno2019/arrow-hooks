@@ -1,8 +1,8 @@
 import { loader } from 'fumadocs-core/source';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
-import { create, docs } from '@/../source.generated';
 import * as Examples from '@/components/examples';
+import { create, docs } from '~/source.generated';
 
 // 创建异步 source
 const createSource = async () => {
