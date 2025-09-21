@@ -1,6 +1,7 @@
 import { loader } from 'fumadocs-core/source';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
+import { TOCAnchorFix } from '@/components/toc-anchor-fix';
 import { create, docs } from '~/source.generated';
 
 // 创建异步 source
@@ -29,6 +30,7 @@ export default async function HomePage() {
         url: '/',
       }}
     >
+      <TOCAnchorFix />
       <DocsPage toc={page.data.toc}>
         <DocsBody>
           <MDX />

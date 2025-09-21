@@ -3,6 +3,7 @@ import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import * as Examples from '@/components/examples';
+import { TOCAnchorFix } from '@/components/toc-anchor-fix';
 import { create, docs } from '~/source.generated';
 
 // 创建异步 source
@@ -35,6 +36,7 @@ export default async function DocPage({ slug }: DocsPageProps) {
         url: '/',
       }}
     >
+      <TOCAnchorFix />
       <DocsPage toc={page.data.toc}>
         <DocsBody>
           <MDX components={{ ...defaultMdxComponents, ...Examples }} />
