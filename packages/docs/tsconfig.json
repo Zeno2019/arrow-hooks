@@ -4,6 +4,9 @@
     "noEmit": true,
     "baseUrl": ".",
     "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
     "paths": {
       "arrow-hooks": [
         "../core/src"
