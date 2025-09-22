@@ -3,13 +3,11 @@
  * 这里导出所有 hooks 的示例组件，方便在文档页面中使用
  */
 
-// Hook 示例组件
-export { CookieDemo } from './cookie-demo';
-export { ThemeSwitcherExample } from './theme-switcher-example';
+// MDX-Lit桥接组件 - 用于在MDX中集成lit-element
+export { MdxLitBridge } from '@/components/mdx-lit-bridge';
 
-// Lit-element Runtime 隔离组件 - 移除SSR导入，改为动态导入
-// 注释掉：import './lit-theme-switcher';
-export { LitComponent } from '@/components/lit-wrapper';
+// Hook 示例组件
+export { ThemeSwitcherExample } from './theme-switcher-example';
 
 // 可以在这里添加更多的示例组件
 // export { EventListenerDemo } from './event-listener-demo';

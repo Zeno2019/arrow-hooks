@@ -1,10 +1,10 @@
 import { createHookComponent } from '@arrow-hooks/react18-runtime';
 import { css } from 'lit';
-import { LitReactBridge } from '../LitReactBridge';
+import { LitReactBridge } from '../lit-react-bridge';
 
 export class LitThemeSwitcher extends LitReactBridge<{ defaultTheme?: string }> {
   static properties = {
-    defaultTheme: { type: String }
+    defaultTheme: { type: String },
   };
 
   defaultTheme = 'light';
@@ -35,10 +35,10 @@ export class LitThemeSwitcher extends LitReactBridge<{ defaultTheme?: string }> 
               padding: '1rem',
               background: theme === 'dark' ? '#1a1a1a' : '#ffffff',
               color: theme === 'dark' ? '#ffffff' : '#000000',
-              border: '2px solid #4ade80',
+              // border: '2px solid #4ade80',
               borderRadius: '8px',
-              fontFamily: 'system-ui, sans-serif'
-            }
+              fontFamily: 'system-ui, sans-serif',
+            },
           },
           [
             React.createElement('h4', { key: 'title' }, '🌙 主题切换器 (React 18)'),
@@ -48,12 +48,12 @@ export class LitThemeSwitcher extends LitReactBridge<{ defaultTheme?: string }> 
               {
                 key: 'button',
                 onClick: () => setTheme(theme === 'dark' ? 'light' : 'dark'),
-                style: { padding: '0.5rem 1rem', cursor: 'pointer' }
+                style: { padding: '0.5rem 1rem', cursor: 'pointer' },
               },
-              theme === 'dark' ? '☀️ 切换到浅色' : '🌙 切换到深色'
-            )
-          ]
-        )
+              theme === 'dark' ? '☀️ 切换到浅色' : '🌙 切换到深色',
+            ),
+          ],
+        ),
     );
   }
 
