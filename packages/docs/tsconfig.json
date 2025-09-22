@@ -21,6 +21,7 @@
   },
   "include": [
     "src/**/*",
-    ".source.ts"
+    ".source.ts",
+    "src/components/lit-elements.d.ts"
   ]
 }
