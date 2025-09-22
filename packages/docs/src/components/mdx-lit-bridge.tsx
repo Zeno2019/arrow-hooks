@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface MdxLitBridgeProps {
   tagName: string;
@@ -14,8 +14,12 @@ interface MdxLitBridgeProps {
  */
 export function MdxLitBridge({ tagName, ...props }: MdxLitBridgeProps) {
   const ref = useRef<HTMLElement>(null);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // 确保只在客户端运行
+    setIsClient(true);
+
     // 动态导入lit组件确保在客户端注册
     if (tagName === 'lit-theme-switcher') {
       import('@/components/examples/lit-theme-switcher').catch((err) => {
@@ -32,6 +36,11 @@ export function MdxLitBridge({ tagName, ...props }: MdxLitBridgeProps) {
       });
     }
   }, [props, tagName]);
+
+  // 只在客户端渲染自定义元素
+  if (!isClient) {
+    return <div>Loading...</div>;
+  }
 
   return React.createElement(tagName, { ref });
 }
