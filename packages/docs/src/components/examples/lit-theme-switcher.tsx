@@ -1,14 +1,13 @@
-import { css, html, LitElement } from 'lit';
-import type { Root } from 'react-dom/client';
+import { createHookComponent } from '@arrow-hooks/react18-runtime';
+import { css } from 'lit';
+import { LitReactBridge } from '../LitReactBridge';
 
-export class LitThemeSwitcher extends LitElement {
+export class LitThemeSwitcher extends LitReactBridge<{ defaultTheme?: string }> {
   static properties = {
     defaultTheme: { type: String }
   };
 
   defaultTheme = 'light';
-  private reactRoot?: Root;
-  private mountPoint?: HTMLDivElement;
 
   static styles = css`
     :host {
@@ -19,12 +18,11 @@ export class LitThemeSwitcher extends LitElement {
     }
   `;
 
-  /** 动态加载 React18 runtime 并挂载组件 */
-  private async mountReact() {
-    const { React, render, createHookComponent } = await import('@arrow-hooks/react18-runtime');
+  protected async getReactComponent() {
+    const { React } = await import('@arrow-hooks/react18-runtime');
     const { useCookie } = await import('arrow-hooks');
 
-    const ThemeSwitcher = createHookComponent(
+    return createHookComponent(
       (props: { defaultTheme?: string }) => {
         const [theme, setTheme] = useCookie('theme', props.defaultTheme || 'light');
         return { theme, setTheme };
@@ -57,24 +55,10 @@ export class LitThemeSwitcher extends LitElement {
           ]
         )
     );
-
-    if (this.mountPoint) {
-      this.reactRoot = render(React.createElement(ThemeSwitcher, { defaultTheme: this.defaultTheme }), this.mountPoint);
-    }
   }
 
-  firstUpdated() {
-    this.mountPoint = this.shadowRoot?.querySelector('.react-mount') as HTMLDivElement;
-    if (this.mountPoint) this.mountReact();
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.reactRoot?.unmount();
-  }
-
-  render() {
-    return html`<div class="react-mount"></div>`;
+  protected getReactProps() {
+    return { defaultTheme: this.defaultTheme };
   }
 }
 
