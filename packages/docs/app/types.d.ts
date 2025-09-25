@@ -1,0 +1,1 @@
+// This file enables type safety for the React Router routes

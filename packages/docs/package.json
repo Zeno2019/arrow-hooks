@@ -3,27 +3,28 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @arrow-hooks/react18-runtime dev & waku dev",
-    "build": "pnpm --filter @arrow-hooks/react18-runtime build && waku build",
-    "preview": "waku preview"
+    "dev": "react-router dev",
+    "build": "react-router build",
+    "preview": "react-router preview"
   },
   "dependencies": {
-    "@arrow-hooks/react18-runtime": "workspace:*",
-    "@types/mdx": "^2.0.13",
+    "@react-router/node": "^7.9.1",
     "arrow-hooks": "workspace:*",
-    "fumadocs-core": "^15.7.13",
-    "fumadocs-mdx": "^12.0.0",
-    "fumadocs-ui": "^15.7.13",
+    "fumadocs-core": "^15.8.0",
+    "fumadocs-mdx": "^12.0.1",
+    "fumadocs-ui": "^15.8.0",
+    "isbot": "^5",
     "lit": "^3.3.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-server-dom-webpack": "~19.1.1",
-    "waku": "^0.26.1"
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router": "^7.9.1"
   },
   "devDependencies": {
+    "@react-router/dev": "^7.9.1",
     "@tailwindcss/vite": "^4.1.13",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/mdx": "^2.0.13",
+    "@types/react": "^19.1.1",
+    "@types/react-dom": "^19.1.1",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.13",
