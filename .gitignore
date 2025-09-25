@@ -17,6 +17,7 @@ dist
 dist-ssr
 *.local
 .react-router
+build/
 
 # Testing
 coverage

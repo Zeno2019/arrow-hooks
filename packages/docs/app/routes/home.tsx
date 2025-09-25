@@ -1,1 +1,73 @@
-export { default } from './home-client';
+import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import { DocsBody, DocsPage } from 'fumadocs-ui/page';
+import { useEffect, useState } from 'react';
+import { TOCAnchorFix } from '../../src/components/toc-anchor-fix';
+import { pageTree } from '../lib/page-tree';
+
+interface DocContent {
+  body: React.ComponentType;
+  frontmatter?: Record<string, unknown>;
+}
+
+export default function HomePageClient() {
+  const [mounted, setMounted] = useState(false);
+  const [content, setContent] = useState<DocContent | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+
+    // 简化：直接导入 MDX，避免复杂的数据加载逻辑
+    const loadContent = async () => {
+      try {
+        const indexModule = await import('../../src/content/index.mdx');
+        setContent({
+          body: indexModule.default,
+          frontmatter: (indexModule as { frontmatter?: Record<string, unknown> }).frontmatter || {},
+        });
+      } catch (error) {
+        console.error('加载文档内容失败:', error);
+      }
+    };
+
+    loadContent();
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  if (!content) {
+    return (
+      <DocsLayout
+        tree={pageTree}
+        nav={{
+          title: 'Arrow Hooks',
+          url: '/',
+        }}
+      >
+        <div className='min-h-screen flex items-center justify-center'>
+          <div>加载文档中...</div>
+        </div>
+      </DocsLayout>
+    );
+  }
+
+  const ContentComponent = content.body;
+
+  return (
+    <DocsLayout
+      tree={pageTree}
+      nav={{
+        title: 'Arrow Hooks',
+        url: '/',
+      }}
+    >
+      <TOCAnchorFix />
+      <DocsPage>
+        <DocsBody>
+          <ContentComponent />
+        </DocsBody>
+      </DocsPage>
+    </DocsLayout>
+  );
+}

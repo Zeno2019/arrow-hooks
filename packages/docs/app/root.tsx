@@ -47,6 +47,14 @@ export default function App() {
   return <Outlet />;
 }
 
+export function HydrateFallback() {
+  return (
+    <div className='min-h-screen flex items-center justify-center'>
+      <div>正在加载...</div>
+    </div>
+  );
+}
+
 export function ErrorBoundary({ error }: { error: unknown }) {
   let message = '页面出现错误！';
   if (isRouteErrorResponse(error)) {

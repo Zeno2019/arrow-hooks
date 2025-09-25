@@ -6,7 +6,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { docs } from '../../source.generated';
 
 // 定义搜索文档的 schema 类型
-interface SearchDocumentSchema {
+interface SearchDocument {
   id: string;
   title: string;
   content: string;
@@ -84,18 +84,12 @@ async function generateSearchData() {
           // 尝试提取内容的不同方式
           if (structured.contents) {
             // 如果有 contents 数组
-            documentContent = structured.contents.map(item => item.content || item.text || '').join(' ');
+            documentContent = structured.contents.map((item) => item.content || '').join(' ');
             console.debug(`${filePath} 从 contents 提取内容，长度:`, documentContent.length);
           } else if (structured.headings) {
             // 如果有 headings 数组，提取标题内容
-            documentContent = structured.headings.map(heading => heading.content || heading.text || '').join(' ');
+            documentContent = structured.headings.map((heading) => heading.content || '').join(' ');
             console.debug(`${filePath} 从 headings 提取内容，长度:`, documentContent.length);
-          } else if (structured.body) {
-            documentContent = structured.body;
-            console.debug(`${filePath} 从 body 提取内容，长度:`, documentContent.length);
-          } else if (structured.content) {
-            documentContent = structured.content;
-            console.debug(`${filePath} 从 content 提取内容，长度:`, documentContent.length);
           } else {
             // 如果以上都没有，尝试遍历所有字符串字段
             const allContent = [];
@@ -103,12 +97,12 @@ async function generateSearchData() {
               if (typeof value === 'string') {
                 allContent.push(value);
               } else if (Array.isArray(value)) {
-                value.forEach(item => {
+                value.forEach((item) => {
                   if (typeof item === 'string') {
                     allContent.push(item);
                   } else if (typeof item === 'object' && item !== null) {
                     // 如果数组项是对象，尝试提取常见的内容字段
-                    ['content', 'text', 'value', 'description'].forEach(field => {
+                    ['content', 'text', 'value', 'description'].forEach((field) => {
                       if (item[field] && typeof item[field] === 'string') {
                         allContent.push(item[field]);
                       }
@@ -134,7 +128,10 @@ async function generateSearchData() {
         if (!documentContent && moduleContent.extractedReferences) {
           const refContent = JSON.stringify(moduleContent.extractedReferences);
           documentContent = refContent;
-          console.debug(`${filePath} 从 extractedReferences 提取内容，长度:`, documentContent.length);
+          console.debug(
+            `${filePath} 从 extractedReferences 提取内容，长度:`,
+            documentContent.length,
+          );
         }
 
         // 清理 Markdown 标记
@@ -150,9 +147,7 @@ async function generateSearchData() {
           .trim();
 
         // 合并所有可搜索内容
-        const searchableContent = [title, description, cleanContent]
-          .filter(Boolean)
-          .join(' ');
+        const searchableContent = [title, description, cleanContent].filter(Boolean).join(' ');
 
         // 生成 URL
         const url = filePath === 'index.mdx' ? '/' : `/${filePath.replace('.mdx', '')}`;
@@ -166,7 +161,6 @@ async function generateSearchData() {
 
         searchData.push(searchItem);
         console.debug(`添加到搜索索引: ${title} - 内容长度: ${searchableContent.length}`);
-
       } catch (fileError) {
         console.error(`处理文件 ${filePath} 时出错:`, fileError);
 
@@ -182,7 +176,6 @@ async function generateSearchData() {
         });
       }
     }
-
   } catch (error) {
     console.error('生成搜索数据时出错:', error);
 
@@ -213,7 +206,7 @@ async function generateSearchData() {
 // 初始化 Orama 搜索引擎
 async function initOrama() {
   console.debug('初始化 Orama 搜索引擎...');
-  const orama = await create({
+  const orama = create({
     schema: {
       id: 'string',
       title: 'string',
@@ -275,11 +268,11 @@ export function SearchProvider({ children }: { children: ReactNode }) {
 
         console.debug('搜索结果:', searchResults);
 
-        // 转换搜索结果格式 - 使用 any 类型避免复杂的 Orama 泛型问题
-        const formattedResults = searchResults.hits.map((hit: any) => ({
+        // 转换搜索结果格式，使用类型断言避免 Orama 复杂的泛型类型问题
+        const formattedResults = (searchResults.hits || []).map((hit: any) => ({
           id: hit.id,
           score: hit.score,
-          document: hit.document,
+          document: hit.document as SearchDocument,
         }));
 
         setResults(formattedResults);
