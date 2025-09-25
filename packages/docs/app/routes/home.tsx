@@ -1,8 +1,8 @@
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { useEffect, useState } from 'react';
-import { TOCAnchorFix } from '../../src/components/toc-anchor-fix';
-import { pageTree } from '../lib/page-tree';
+import { TOCAnchorFix } from '@/components/toc-anchor-fix';
+import { pageTree } from '@/lib/page-tree';
 
 interface DocContent {
   body: React.ComponentType;
@@ -19,7 +19,7 @@ export default function HomePageClient() {
     // 简化：直接导入 MDX，避免复杂的数据加载逻辑
     const loadContent = async () => {
       try {
-        const indexModule = await import('../../src/content/index.mdx');
+        const indexModule = await import('@/content/index.mdx');
         setContent({
           body: indexModule.default,
           frontmatter: (indexModule as { frontmatter?: Record<string, unknown> }).frontmatter || {},

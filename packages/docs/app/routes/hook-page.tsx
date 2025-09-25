@@ -2,8 +2,8 @@ import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { TOCAnchorFix } from '../../src/components/toc-anchor-fix';
-import { pageTree } from '../lib/page-tree';
+import { TOCAnchorFix } from '@/components/toc-anchor-fix';
+import { pageTree } from '@/lib/page-tree';
 
 interface DocContent {
   body: React.ComponentType;
@@ -14,7 +14,6 @@ interface DocContent {
     depth: number;
   }>;
 }
-
 
 export default function HookPageClient() {
   const params = useParams();
@@ -38,7 +37,7 @@ export default function HookPageClient() {
         setLoading(true);
 
         if (slugArray.length > 0) {
-          const hookModule = await import(`../../src/content/hooks/${slugArray.join('/')}.mdx`);
+          const hookModule = await import(`@/content/hooks/${slugArray.join('/')}.mdx`);
           setContent({
             body: hookModule.default,
             frontmatter: hookModule.frontmatter || {},
