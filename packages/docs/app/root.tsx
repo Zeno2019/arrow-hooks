@@ -8,6 +8,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from 'react-router';
+import { SearchProvider } from '../src/components/search-provider';
 
 import './styles/globals.css';
 
@@ -26,8 +27,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
             theme={{
               enabled: false,
             }}
+            search={{
+              enabled: false,
+            }}
           >
-            {children}
+            <SearchProvider>
+              {children}
+            </SearchProvider>
           </RootProvider>
         </ReactRouterProvider>
         <ScrollRestoration />

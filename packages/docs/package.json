@@ -8,6 +8,7 @@
     "preview": "react-router preview"
   },
   "dependencies": {
+    "@orama/orama": "^3.1.14",
     "@react-router/node": "^7.9.1",
     "arrow-hooks": "workspace:*",
     "fumadocs-core": "^15.8.0",
