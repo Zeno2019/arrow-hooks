@@ -3,6 +3,7 @@ import { useParams } from 'react-router';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { pageTree } from '../lib/page-tree';
+import { TOCAnchorFix } from '../../src/components/toc-anchor-fix';
 
 interface DocContent {
   body: React.ComponentType;
@@ -124,6 +125,7 @@ export default function HookPageClient() {
         url: '/',
       }}
     >
+      <TOCAnchorFix />
       <DocsPage toc={content.toc}>
         <DocsBody>
           <ContentComponent />
