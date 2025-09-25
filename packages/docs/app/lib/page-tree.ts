@@ -10,13 +10,15 @@ export const pageTree: PageTree.Root = {
       url: '/',
     },
     {
-      type: 'separator',
-      name: 'Hooks 文档',
-    },
-    {
-      type: 'page',
-      name: 'useCookie',
-      url: '/hooks/use-cookie',
+      type: 'folder',
+      name: '状态管理',
+      children: [
+        {
+          type: 'page',
+          name: 'useCookie',
+          url: '/hooks/use-cookie',
+        },
+      ],
     },
   ],
 };
