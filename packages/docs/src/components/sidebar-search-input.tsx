@@ -11,7 +11,7 @@ export function SidebarSearchInput({ className = '' }: SidebarSearchInputProps) 
 
   // 检测操作系统以显示正确的快捷键
   const isMac = typeof window !== 'undefined' && navigator.userAgent.includes('Mac');
-  const shortcutKey = isMac ? '⌘K' : 'Ctrl+K';
+  const shortcutKey = isMac ? '⌘+K' : 'Ctrl+K';
 
   const handleClick = () => {
     setOpen(true);
@@ -26,7 +26,7 @@ export function SidebarSearchInput({ className = '' }: SidebarSearchInputProps) 
 
   return (
     <div
-      className={`sidebar-search-input group cursor-pointer rounded-lg border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 ${className}`}
+      className={`sidebar-search-input group cursor-pointer rounded-lg border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground ${className}`}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       tabIndex={0}
