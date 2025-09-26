@@ -11,6 +11,11 @@ import { pageTree } from '@/lib/page-tree';
 interface DocContent {
   body: React.ComponentType<MDXProps>;
   frontmatter?: Record<string, unknown>;
+  toc?: Array<{
+    title: string;
+    url: string;
+    depth: number;
+  }>;
 }
 
 export default function HomePageClient() {
@@ -27,6 +32,7 @@ export default function HomePageClient() {
         setContent({
           body: indexModule.default,
           frontmatter: (indexModule as { frontmatter?: Record<string, unknown> }).frontmatter || {},
+          toc: (indexModule as { toc?: Array<{ title: string; url: string; depth: number }> }).toc || [],
         });
       } catch (error) {
         console.error('加载文档内容失败:', error);
@@ -80,7 +86,7 @@ export default function HomePageClient() {
       }}
     >
       <TOCAnchorFix />
-      <DocsPage>
+      <DocsPage toc={content.toc}>
         <DocsBody>
           <ContentComponent components={mdxComponents} />
         </DocsBody>

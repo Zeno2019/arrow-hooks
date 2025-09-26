@@ -1,13 +1,13 @@
-import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import { DocsBody, DocsPage } from 'fumadocs-ui/page';
-import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import defaultMdxComponents from 'fumadocs-ui/mdx';
+import { DocsBody, DocsPage } from 'fumadocs-ui/page';
+import type { MDXProps } from 'mdx/types';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { SidebarSearchInput } from '@/components/sidebar-search-input';
 import { TOCAnchorFix } from '@/components/toc-anchor-fix';
 import { pageTree } from '@/lib/page-tree';
-import type { MDXProps } from 'mdx/types';
 
 interface DocContent {
   body: React.ComponentType<MDXProps>;
