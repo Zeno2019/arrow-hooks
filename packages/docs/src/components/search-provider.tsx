@@ -305,73 +305,77 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   return (
     <SearchContext.Provider value={{ open, setOpen, search, setSearch, results, isLoading }}>
       {children}
-      {/* 完全自定义的搜索对话框，不使用 fumadocs 的 SearchDialog */}
-      {open && (
-        <div className='fixed inset-0 z-50 bg-black/50' onClick={() => setOpen(false)}>
-          <div
-            className='fixed top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl w-full max-w-md p-4'
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className='mb-4'>
-              <input
-                type='text'
-                placeholder='搜索文档...'
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className='w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring'
-                autoFocus
-              />
-            </div>
-
-            {/* 显示搜索结果 */}
-            <div className='max-h-64 overflow-y-auto'>
-              {isLoading ? (
-                <p className='text-sm text-gray-500'>搜索中...</p>
-              ) : results.length > 0 ? (
-                <div>
-                  <p className='text-sm text-gray-600 mb-2'>找到 {results.length} 个结果：</p>
-                  {results.map((result: SearchResultItem) => (
-                    <div
-                      key={result.id}
-                      className='p-2 hover:bg-gray-100 rounded cursor-pointer'
-                      onClick={() => {
-                        // 使用 result.document 访问文档数据
-                        const url = result.document?.url || `/${result.id}`;
-                        window.location.href = url;
-                        setOpen(false);
-                      }}
-                    >
-                      {/* 显示搜索结果内容 */}
-                      <div className='font-medium'>{result.document?.title || result.id}</div>
-                      <div className='text-sm text-gray-600 truncate'>
-                        {result.document?.content || ''}
-                      </div>
-                      <div className='text-xs text-gray-400 mt-1'>
-                        {result.document?.url && `URL: ${result.document.url}`}
-                        {result.score && ` (Score: ${result.score.toFixed(2)})`}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : search ? (
-                <p className='text-sm text-gray-500'>没有找到结果</p>
-              ) : (
-                <p className='text-sm text-gray-500'>输入关键词开始搜索</p>
-              )}
-            </div>
-
-            <div className='mt-4 flex justify-end'>
-              <button
-                onClick={() => setOpen(false)}
-                className='px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded'
-              >
-                关闭
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {open && <SearchDialog />}
     </SearchContext.Provider>
+  );
+}
+
+// 分离的搜索对话框组件
+function SearchDialog() {
+  const { setOpen, search, setSearch, results, isLoading } = useSearch();
+
+  return (
+    <div className='fixed inset-0 z-50 bg-black/50' onClick={() => setOpen(false)}>
+      <div
+        className='fixed top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl w-full max-w-md p-4 dark:bg-gray-800'
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className='mb-4'>
+          <input
+            type='text'
+            placeholder='搜索文档...'
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className='w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring dark:bg-gray-700 dark:border-gray-600 dark:text-white'
+            autoFocus
+          />
+        </div>
+
+        <div className='max-h-64 overflow-y-auto'>
+          {isLoading ? (
+            <p className='text-sm text-gray-500'>搜索中...</p>
+          ) : results.length > 0 ? (
+            <div>
+              <p className='text-sm text-gray-600 mb-2 dark:text-gray-400'>找到 {results.length} 个结果：</p>
+              {results.map((result: SearchResultItem) => (
+                <div
+                  key={result.id}
+                  className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer'
+                  onClick={() => {
+                    const url = result.document?.url || `/${result.id}`;
+                    window.location.href = url;
+                    setOpen(false);
+                  }}
+                >
+                  <div className='font-medium dark:text-white'>{result.document?.title || result.id}</div>
+                  <div className='text-sm text-gray-600 dark:text-gray-400 truncate'>
+                    {result.document?.content || ''}
+                  </div>
+                  {result.score && (
+                    <div className='text-xs text-gray-400 mt-1'>
+                      Score: {result.score.toFixed(2)}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : search ? (
+            <p className='text-sm text-gray-500'>没有找到结果</p>
+          ) : (
+            <p className='text-sm text-gray-500'>输入关键词开始搜索</p>
+          )}
+        </div>
+
+        <div className='mt-4 flex justify-end'>
+          <button
+            onClick={() => setOpen(false)}
+            className='px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white rounded transition-colors'
+          >
+            关闭
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
