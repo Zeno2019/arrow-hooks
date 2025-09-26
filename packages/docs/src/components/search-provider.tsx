@@ -60,6 +60,11 @@ async function generateSearchData() {
 
         // 动态导入 MDX 文件内容
         const importFunction = docs.doc[filePath];
+        if (!importFunction) {
+          console.warn(`跳过文件 ${filePath}: 没有导入函数`);
+          continue;
+        }
+
         const moduleContent = await importFunction();
 
         console.debug(`${filePath} 模块内容:`, moduleContent);
@@ -163,6 +168,12 @@ async function generateSearchData() {
         console.debug(`添加到搜索索引: ${title} - 内容长度: ${searchableContent.length}`);
       } catch (fileError) {
         console.error(`处理文件 ${filePath} 时出错:`, fileError);
+
+        // 检查是否是网络错误或模块导入错误
+        if (fileError instanceof TypeError && fileError.message.includes('Failed to fetch')) {
+          console.warn(`跳过无法加载的文件: ${filePath}`);
+          continue;
+        }
 
         // 为失败的文件提供基础数据
         const title = filePath.replace('.mdx', '').replace('hooks/', '');

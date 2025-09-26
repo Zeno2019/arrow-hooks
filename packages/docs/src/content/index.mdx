@@ -28,31 +28,28 @@ description: A collection of practical React hooks with TypeScript support
 
 ### 事件处理
 - [useEventListener](/hooks/use-event-listener) - 简化事件监听器的管理
-- [useKeyboardEvent](/hooks/use-keyboard-event) - 处理键盘事件
 
-### 交互观察
-- [useIntersectionObserver](/hooks/use-intersection-observer) - 使用 Intersection Observer API
-- [useInfiniteScroll](/hooks/use-infinite-scroll) - 无限滚动功能
+## 开发进度 :rocket:
 
-### 媒体查询
-- [useMediaQuery](/hooks/use-media-query) - 响应式媒体查询
+当前开发状态跟踪：
 
-## 安装
-
-```bash
-# pnpm (推荐)
-pnpm add arrow-hooks
-
-# npm
-npm install arrow-hooks
-
-# yarn
-yarn add arrow-hooks
-```
+- [x] 基础 Hook 实现
+- [x] TypeScript 类型定义
+- [x] 单元测试覆盖
+- [x] 文档站搭建
+- [ ] 更多 Hook 扩展
 
 ## 快速开始
 
-```tsx
+安装依赖：
+
+```bash
+pnpm add arrow-hooks
+```
+
+基础使用示例：
+
+```tsx tab="React 函数组件"
 import { useCookie } from 'arrow-hooks'
 
 function App() {
