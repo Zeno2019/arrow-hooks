@@ -1,9 +1,9 @@
 'use client';
 
+import { create } from '@orama/orama';
 import { useDocsSearch } from 'fumadocs-core/search/client';
 import type { SharedProps } from 'fumadocs-ui/components/dialog/search';
 import { SearchDialog } from 'fumadocs-ui/components/dialog/search';
-import { create } from '@orama/orama';
 
 // 初始化 Orama 搜索引擎 - SPA 模式下的客户端搜索
 function initOrama() {
@@ -26,11 +26,7 @@ export function CustomSearchDialog(props: SharedProps) {
   console.debug('Search state:', { search, queryData: query.data });
 
   return (
-    <SearchDialog
-      {...props}
-      search={search}
-      onSearchChange={setSearch}
-    >
+    <SearchDialog {...props} search={search} onSearchChange={setSearch}>
       {/* SearchDialog 需要 children */}
       <div />
     </SearchDialog>
