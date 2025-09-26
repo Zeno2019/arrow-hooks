@@ -2,6 +2,7 @@ import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
+import { SidebarSearchInput } from '@/components/sidebar-search-input';
 import { TOCAnchorFix } from '@/components/toc-anchor-fix';
 import { pageTree } from '@/lib/page-tree';
 
@@ -69,6 +70,9 @@ export default function HookPageClient() {
           title: 'Arrow Hooks',
           url: '/',
         }}
+        sidebar={{
+          banner: <SidebarSearchInput className='mb-4' />,
+        }}
       >
         <div className='min-h-screen flex items-center justify-center'>
           <div>加载 Hook 文档中...</div>
@@ -84,6 +88,9 @@ export default function HookPageClient() {
         nav={{
           title: 'Arrow Hooks',
           url: '/',
+        }}
+        sidebar={{
+          banner: <SidebarSearchInput className='mb-4' />,
         }}
       >
         <div className='min-h-screen p-8'>
@@ -113,6 +120,9 @@ export default function HookPageClient() {
       nav={{
         title: 'Arrow Hooks',
         url: '/',
+      }}
+      sidebar={{
+        banner: <SidebarSearchInput className='mb-4' />,
       }}
     >
       <TOCAnchorFix />

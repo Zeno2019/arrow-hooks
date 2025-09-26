@@ -1,6 +1,7 @@
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { useEffect, useState } from 'react';
+import { SidebarSearchInput } from '@/components/sidebar-search-input';
 import { TOCAnchorFix } from '@/components/toc-anchor-fix';
 import { pageTree } from '@/lib/page-tree';
 
@@ -44,6 +45,9 @@ export default function HomePageClient() {
           title: 'Arrow Hooks',
           url: '/',
         }}
+        sidebar={{
+          banner: <SidebarSearchInput className='mb-4' />,
+        }}
       >
         <div className='min-h-screen flex items-center justify-center'>
           <div>加载文档中...</div>
@@ -60,6 +64,9 @@ export default function HomePageClient() {
       nav={{
         title: 'Arrow Hooks',
         url: '/',
+      }}
+      sidebar={{
+        banner: <SidebarSearchInput className='mb-4' />,
       }}
     >
       <TOCAnchorFix />
