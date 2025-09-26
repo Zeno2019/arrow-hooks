@@ -8,5 +8,9 @@ export default defineConfig({
   mdxOptions: {
     remarkPlugins: [],
     rehypePlugins: [],
+    // 启用代码选项卡功能
+    remarkCodeTabOptions: {
+      parseMdx: true,
+    },
   },
 });

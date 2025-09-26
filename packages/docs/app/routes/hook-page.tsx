@@ -1,13 +1,16 @@
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
+import defaultMdxComponents from 'fumadocs-ui/mdx';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { SidebarSearchInput } from '@/components/sidebar-search-input';
 import { TOCAnchorFix } from '@/components/toc-anchor-fix';
 import { pageTree } from '@/lib/page-tree';
+import type { MDXProps } from 'mdx/types';
 
 interface DocContent {
-  body: React.ComponentType;
+  body: React.ComponentType<MDXProps>;
   frontmatter?: Record<string, unknown>;
   toc?: Array<{
     title: string;
@@ -114,6 +117,13 @@ export default function HookPageClient() {
 
   const ContentComponent = content.body;
 
+  // 组合默认MDX组件和自定义组件
+  const mdxComponents = {
+    ...defaultMdxComponents,
+    Tab,
+    Tabs,
+  } as MDXProps['components'];
+
   return (
     <DocsLayout
       tree={pageTree}
@@ -128,7 +138,7 @@ export default function HookPageClient() {
       <TOCAnchorFix />
       <DocsPage toc={content.toc}>
         <DocsBody>
-          <ContentComponent />
+          <ContentComponent components={mdxComponents} />
         </DocsBody>
       </DocsPage>
     </DocsLayout>
