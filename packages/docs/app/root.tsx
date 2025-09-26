@@ -24,9 +24,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body suppressHydrationWarning>
         <ReactRouterProvider>
           <RootProvider
-            theme={{
-              enabled: false,
-            }}
             search={{
               enabled: false,
             }}
