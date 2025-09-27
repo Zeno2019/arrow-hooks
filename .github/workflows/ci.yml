@@ -2,36 +2,45 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 8
-        
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'pnpm'
-        
-    - name: Install dependencies
-      run: pnpm install
 
-    - name: Type Check
-      run: pnpm run type-check
-      
-    - name: Run Tests
-      run: pnpm run test
-      
-    - name: Build
-      run: pnpm run build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Type Check core
+        run: cd core && pnpm run type-check --if-present
+
+      - name: Run Tests core
+        run: cd core && pnpm run test --if-present
+
+      - name: Build core
+        run: cd core && pnpm run build --if-present
+
+      - name: Type Check docs
+        run: cd docs && pnpm run type-check --if-present
+
+      - name: Run Tests docs
+        run: cd docs && pnpm run test --if-present
+
+      - name: Build docs
+        run: cd docs && pnpm run build --if-present

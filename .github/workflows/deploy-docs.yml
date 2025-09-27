@@ -1,0 +1,32 @@
+name: Deploy Docs to Cloudflare Pages
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "docs/**"
+      - ".github/workflows/deploy-docs.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build docs
+        run: cd docs && pnpm run build
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          projectName: arrow-hooks-docs
+          directory: docs/dist
