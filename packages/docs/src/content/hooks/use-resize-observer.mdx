@@ -48,7 +48,7 @@ function App() {
 }
 ```
 
-## 使用场景
+## 其他场景
 
 ### 1. 响应式图表
 
@@ -104,64 +104,7 @@ function ResponsiveChart() {
 }
 ```
 
-### 2. 容器查询模拟
-
-根据容器尺寸切换不同的布局：
-
-```tsx
-import { useResizeObserver } from 'arrow-hooks'
-import { useRef, useState } from 'react'
-
-function ContainerQuery({ children }: { children: React.ReactNode }) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [containerWidth, setContainerWidth] = useState(0)
-
-  useResizeObserver(containerRef, (entry) => {
-    setContainerWidth(entry.contentRect.width)
-  })
-
-  // 根据容器宽度决定布局
-  const getLayout = () => {
-    if (containerWidth < 300) return 'stack'
-    if (containerWidth < 600) return 'sidebar'
-    return 'grid'
-  }
-
-  const layout = getLayout()
-
-  return (
-    <div
-      ref={containerRef}
-      style={{
-        width: '100%',
-        padding: '1rem',
-        border: '1px solid #e0e0e0',
-        borderRadius: '4px'
-      }}
-      data-layout={layout}
-    >
-      <div style={{
-        display: layout === 'stack' ? 'block' :
-                layout === 'sidebar' ? 'flex' : 'grid',
-        gridTemplateColumns: layout === 'grid' ? 'repeat(3, 1fr)' : undefined,
-        gap: '1rem'
-      }}>
-        {children}
-      </div>
-      <div style={{
-        marginTop: '1rem',
-        fontSize: '0.875rem',
-        color: '#666',
-        textAlign: 'center'
-      }}>
-        容器宽度: {Math.round(containerWidth)}px | 布局模式: {layout}
-      </div>
-    </div>
-  )
-}
-```
-
-### 3. 自适应文本大小
+### 2. 自适应文本大小
 
 根据容器大小调整文字尺寸：
 
@@ -220,65 +163,6 @@ function AdaptiveText({ text }: { text: string }) {
 }
 ```
 
-### 4. 虚拟滚动优化
-
-根据容器尺寸计算可见项目数量：
-
-```tsx
-import { useResizeObserver } from 'arrow-hooks'
-import { useRef, useState, useMemo } from 'react'
-
-function VirtualList({ items, itemHeight = 50 }: {
-  items: string[]
-  itemHeight?: number
-}) {
-  const listRef = useRef<HTMLDivElement>(null)
-  const [containerHeight, setContainerHeight] = useState(0)
-
-  useResizeObserver(listRef, (entry) => {
-    setContainerHeight(entry.contentRect.height)
-  })
-
-  const visibleCount = useMemo(() => {
-    return Math.ceil(containerHeight / itemHeight) + 2 // 额外渲染2项缓冲
-  }, [containerHeight, itemHeight])
-
-  return (
-    <div
-      ref={listRef}
-      style={{
-        height: '300px',
-        overflowY: 'auto',
-        border: '1px solid #e0e0e0',
-        borderRadius: '4px'
-      }}
-    >
-      {items.slice(0, visibleCount).map((item, index) => (
-        <div
-          key={index}
-          style={{
-            height: itemHeight,
-            padding: '0 1rem',
-            display: 'flex',
-            alignItems: 'center',
-            borderBottom: '1px solid #f0f0f0'
-          }}
-        >
-          {item}
-        </div>
-      ))}
-      <div style={{
-        padding: '0.5rem',
-        textAlign: 'center',
-        fontSize: '0.875rem',
-        color: '#666'
-      }}>
-        显示 {visibleCount} / {items.length} 项
-      </div>
-    </div>
-  )
-}
-```
 
 ## API 参考
 

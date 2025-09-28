@@ -33,7 +33,7 @@ function App() {
 }
 ```
 
-## 使用场景
+## 其他场景
 
 ### 1. 响应式布局
 
@@ -117,55 +117,7 @@ function ThemeAwareComponent() {
 }
 ```
 
-### 3. 可访问性支持
-
-检测用户的可访问性偏好：
-
-```tsx
-import { useMediaQuery } from 'arrow-hooks'
-
-function AccessibleComponent() {
-  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
-  const prefersHighContrast = useMediaQuery('(prefers-contrast: high)')
-
-  return (
-    <div>
-      <button
-        style={{
-          padding: '1rem 2rem',
-          backgroundColor: prefersHighContrast ? '#000000' : '#1890ff',
-          color: prefersHighContrast ? '#ffffff' : '#ffffff',
-          border: prefersHighContrast ? '2px solid #ffffff' : 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          // 根据用户偏好决定是否启用动画
-          transition: prefersReducedMotion ? 'none' : 'all 0.3s ease',
-          transform: prefersReducedMotion ? 'none' : 'scale(1)',
-        }}
-        onMouseEnter={(e) => {
-          if (!prefersReducedMotion) {
-            e.currentTarget.style.transform = 'scale(1.05)'
-          }
-        }}
-        onMouseLeave={(e) => {
-          if (!prefersReducedMotion) {
-            e.currentTarget.style.transform = 'scale(1)'
-          }
-        }}
-      >
-        {prefersReducedMotion ? '静态按钮' : '动画按钮'}
-      </button>
-
-      <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: '#666' }}>
-        {prefersReducedMotion && '✅ 已禁用动画效果'}
-        {prefersHighContrast && '✅ 已启用高对比度模式'}
-      </p>
-    </div>
-  )
-}
-```
-
-### 4. 设备特征检测
+### 3. 设备特征检测
 
 检测设备的物理特征和交互能力：
 
@@ -236,78 +188,6 @@ function DeviceAwareComponent() {
         <h4>输入方式</h4>
         <p>主要输入方式: {isTouchDevice ? '👆 触摸' : '🖱️ 鼠标/触控板'}</p>
       </div>
-    </div>
-  )
-}
-```
-
-### 5. 打印样式适配
-
-为打印媒体提供特殊的样式和内容：
-
-```tsx
-import { useMediaQuery } from 'arrow-hooks'
-
-function PrintFriendlyComponent() {
-  const isPrint = useMediaQuery('print')
-
-  return (
-    <div>
-      <header style={{
-        display: isPrint ? 'none' : 'block',
-        padding: '1rem',
-        backgroundColor: '#f5f5f5'
-      }}>
-        <nav>
-          <a href="/">首页</a>
-          <a href="/about">关于</a>
-          <a href="/contact">联系</a>
-        </nav>
-      </header>
-
-      <main style={{ padding: '2rem' }}>
-        <h1>文章标题</h1>
-
-        {isPrint && (
-          <div style={{
-            borderBottom: '1px solid #000',
-            paddingBottom: '1rem',
-            marginBottom: '2rem'
-          }}>
-            <p><strong>打印时间:</strong> {new Date().toLocaleString()}</p>
-            <p><strong>网站:</strong> https://example.com</p>
-          </div>
-        )}
-
-        <article>
-          <p>这是文章的主要内容...</p>
-        </article>
-
-        {!isPrint && (
-          <aside style={{
-            marginTop: '2rem',
-            padding: '1rem',
-            backgroundColor: '#f0f8ff',
-            borderRadius: '4px'
-          }}>
-            <h3>相关推荐</h3>
-            <ul>
-              <li>推荐文章 1</li>
-              <li>推荐文章 2</li>
-              <li>推荐文章 3</li>
-            </ul>
-          </aside>
-        )}
-      </main>
-
-      <footer style={{
-        display: isPrint ? 'none' : 'block',
-        padding: '1rem',
-        backgroundColor: '#f5f5f5',
-        textAlign: 'center'
-      }}>
-        <p>&copy; 2024 网站名称</p>
-      </footer>
     </div>
   )
 }

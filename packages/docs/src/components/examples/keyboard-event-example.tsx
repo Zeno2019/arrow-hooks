@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { useKeyboardEvent } from 'arrow-hooks';
+import React, { useState } from 'react';
 
 export function KeyboardEventExample() {
   const [lastKey, setLastKey] = useState('');
@@ -9,13 +9,13 @@ export function KeyboardEventExample() {
   // 监听所有按键按下
   useKeyboardEvent('keydown', (e) => {
     setLastKey(e.key);
-    setKeyHistory(prev => [...prev.slice(-9), e.key]);
-    setPressedKeys(prev => new Set([...prev, e.key]));
+    setKeyHistory((prev) => [...prev.slice(-9), e.key]);
+    setPressedKeys((prev) => new Set([...prev, e.key]));
   });
 
   // 监听按键释放
   useKeyboardEvent('keyup', (e) => {
-    setPressedKeys(prev => {
+    setPressedKeys((prev) => {
       const newSet = new Set(prev);
       newSet.delete(e.key);
       return newSet;
@@ -23,10 +23,14 @@ export function KeyboardEventExample() {
   });
 
   // 监听特定按键 - Escape
-  useKeyboardEvent('keydown', () => {
-    setKeyHistory([]);
-    setPressedKeys(new Set());
-  }, 'Escape');
+  useKeyboardEvent(
+    'keydown',
+    () => {
+      setKeyHistory([]);
+      setPressedKeys(new Set());
+    },
+    'Escape',
+  );
 
   return (
     <div style={{ padding: '1rem', border: '1px solid #e0e0e0', borderRadius: '8px' }}>
@@ -51,44 +55,6 @@ export function KeyboardEventExample() {
           }}
         >
           {lastKey || '按任意键开始'}
-        </div>
-      </div>
-
-      {/* 当前按下的键 */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h5>🔥 当前按下的键</h5>
-        <div
-          style={{
-            padding: '1rem',
-            backgroundColor: '#f6ffed',
-            border: '1px solid #b7eb8f',
-            borderRadius: '4px',
-            minHeight: '60px',
-            display: 'flex',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '0.5rem',
-          }}
-        >
-          {pressedKeys.size === 0 ? (
-            <span style={{ color: '#999' }}>无按键按下</span>
-          ) : (
-            Array.from(pressedKeys).map((key) => (
-              <span
-                key={key}
-                style={{
-                  padding: '0.25rem 0.5rem',
-                  backgroundColor: '#52c41a',
-                  color: 'white',
-                  borderRadius: '4px',
-                  fontSize: '0.875rem',
-                  fontFamily: 'monospace',
-                }}
-              >
-                {key}
-              </span>
-            ))
-          )}
         </div>
       </div>
 
