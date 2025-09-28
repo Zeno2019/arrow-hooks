@@ -64,13 +64,13 @@ jobs:
         run: pnpm install
 
       - name: Type Check
-        run: pnpm --filter arrow-hooks type-check --if-present
+        run: pnpm --filter arrow-hooks --if-present type-check
 
       - name: Run Tests
-        run: pnpm --filter arrow-hooks test --if-present
+        run: pnpm --filter arrow-hooks --if-present test
 
       - name: Build
-        run: pnpm --filter arrow-hooks build --if-present
+        run: pnpm --filter arrow-hooks --if-present build
 
       - name: Publish to npm
         run: cd packages/core && npm publish

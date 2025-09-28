@@ -28,19 +28,19 @@ jobs:
         run: pnpm install
 
       - name: Type Check core
-        run: pnpm --filter arrow-hooks type-check --if-present
+        run: pnpm --filter arrow-hooks --if-present type-check
 
       - name: Run Tests core
-        run: pnpm --filter arrow-hooks test --if-present
+        run: pnpm --filter arrow-hooks --if-present test
 
       - name: Build core
-        run: pnpm --filter arrow-hooks build --if-present
+        run: pnpm --filter arrow-hooks --if-present build
 
       - name: Type Check docs
-        run: pnpm --filter @arrow-hooks/docs type-check --if-present
+        run: pnpm --filter @arrow-hooks/docs --if-present type-check
 
       - name: Run Tests docs
-        run: pnpm --filter @arrow-hooks/docs test --if-present
+        run: pnpm --filter @arrow-hooks/docs --if-present test
 
       - name: Build docs
-        run: pnpm --filter @arrow-hooks/docs build --if-present
+        run: pnpm --filter @arrow-hooks/docs --if-present build
