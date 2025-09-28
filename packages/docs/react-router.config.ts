@@ -7,6 +7,9 @@ export default {
   // 明确设置为 SPA 模式
   appDirectory: 'app',
 
+  // 设置构建输出目录
+  buildDirectory: 'dist',
+
   // 优化配置
   future: {
     unstable_optimizeDeps: true,
