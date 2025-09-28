@@ -4,7 +4,8 @@ on:
   push:
     branches: [master]
     paths:
-      - "docs/**"
+      - "packages/docs/**"
+      - "packages/core/src/**"
       - ".github/workflows/deploy-docs.yml"
 
 jobs:
@@ -21,7 +22,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build docs
-        run: cd docs && pnpm run build
+        run: pnpm --filter @arrow-hooks/docs build
 
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1
@@ -29,4 +30,4 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           projectName: arrow-hooks-docs
-          directory: docs/dist
+          directory: packages/docs/dist

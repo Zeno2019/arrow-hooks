@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
     paths:
-      - "core/package.json"
+      - "packages/core/package.json"
 
 jobs:
   check-version:
@@ -22,11 +22,11 @@ jobs:
       - name: Check if version changed
         id: check
         run: |
-          current_version=$(node -p "require('./core/package.json').version")
+          current_version=$(node -p "require('./packages/core/package.json').version")
 
-          git checkout HEAD~1 -- core/package.json 2>/dev/null || echo "First commit"
-          previous_version=$(node -p "require('./core/package.json').version" 2>/dev/null || echo "0.0.0")
-          git checkout HEAD -- core/package.json
+          git checkout HEAD~1 -- packages/core/package.json 2>/dev/null || echo "First commit"
+          previous_version=$(node -p "require('./packages/core/package.json').version" 2>/dev/null || echo "0.0.0")
+          git checkout HEAD -- packages/core/package.json
 
           echo "Previous version: $previous_version"
           echo "Current version: $current_version"
@@ -49,9 +49,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -64,16 +64,16 @@ jobs:
         run: pnpm install
 
       - name: Type Check
-        run: cd core && pnpm run type-check --if-present
+        run: pnpm --filter arrow-hooks type-check --if-present
 
       - name: Run Tests
-        run: cd core && pnpm run test --if-present
+        run: pnpm --filter arrow-hooks test --if-present
 
       - name: Build
-        run: cd core && pnpm run build --if-present
+        run: pnpm --filter arrow-hooks build --if-present
 
       - name: Publish to npm
-        run: cd core && npm publish
+        run: cd packages/core && npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
