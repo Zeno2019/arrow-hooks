@@ -18,16 +18,22 @@ description: A collection of practical React hooks with TypeScript support
 
 ## Hook 列表
 
-### 状态管理
-- [useCookie](/hooks/use-cookie) - 操作浏览器 Cookie 的 Hook
-
 ### DOM 操作
+- [useEventListener](/hooks/use-event-listener) - 类型安全的 DOM 事件监听器
 - [useHover](/hooks/use-hover) - 检测元素悬停状态
-- [useWindowSize](/hooks/use-window-size) - 监听窗口尺寸变化
-- [useResizeObserver](/hooks/use-resize-observer) - 使用 ResizeObserver API 监听元素尺寸变化
+- [useResizeObserver](/hooks/use-resize-observer) - 监听 DOM 元素尺寸变化
+- [useIntersectionObserver](/hooks/use-intersection-observer) - 监听元素可见性变化
 
-### 事件处理
-- [useEventListener](/hooks/use-event-listener) - 简化事件监听器的管理
+### BOM 操作
+- [useWindowSize](/hooks/use-window-size) - 监听窗口尺寸变化
+- [useMediaQuery](/hooks/use-media-query) - 响应媒体查询变化
+
+### 存储与数据
+- [useCookie](/hooks/use-cookie) - 操作浏览器 Cookie
+
+### 多媒体与交互
+- [useKeyboardEvent](/hooks/use-keyboard-event) - 处理键盘事件
+- [useInfiniteScroll](/hooks/use-infinite-scroll) - 实现无限滚动
 
 ## 开发进度 :rocket:
 
@@ -37,7 +43,8 @@ description: A collection of practical React hooks with TypeScript support
 - [x] TypeScript 类型定义
 - [x] 单元测试覆盖
 - [x] 文档站搭建
-- [ ] 更多 Hook 扩展
+- [x] 丰富的 Hook 集合实现
+- [ ] SSR 支持计划
 
 ## 快速开始
 
@@ -50,14 +57,16 @@ pnpm add arrow-hooks
 基础使用示例：
 
 ```tsx tab="React 函数组件"
-import { useCookie } from 'arrow-hooks'
+import { useCookie, useWindowSize } from 'arrow-hooks'
 
 function App() {
   const [theme, setTheme] = useCookie('theme', 'light')
+  const { width, height } = useWindowSize()
 
   return (
     <div>
       <p>当前主题: {theme}</p>
+      <p>窗口尺寸: {width} × {height}</p>
       <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
         切换主题
       </button>

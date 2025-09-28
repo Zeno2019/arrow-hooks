@@ -21,15 +21,100 @@ import { useState } from 'react'
 
 function App() {
   const [lastKey, setLastKey] = useState('')
+  const [keyHistory, setKeyHistory] = useState<string[]>([])
 
-  // 监听所有按键
+  // 监听所有按键按下
   useKeyboardEvent('keydown', (e) => {
     setLastKey(e.key)
+    setKeyHistory(prev => [...prev.slice(-9), e.key])
   })
 
+  // 监听特定按键 - Escape
+  useKeyboardEvent('keydown', () => {
+    setKeyHistory([])
+    setLastKey('')
+  }, 'Escape')
+
   return (
-    <div>
-      <p>按任意键: {lastKey}</p>
+    <div style={{ padding: '1rem' }}>
+      {/* 最后按下的键 */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h4>⌨️ 最后按下的键</h4>
+        <div style={{
+          padding: '1rem',
+          backgroundColor: '#f0f8ff',
+          border: '2px solid #1890ff',
+          borderRadius: '8px',
+          textAlign: 'center',
+          fontSize: '1.5rem',
+          fontFamily: 'monospace',
+          minHeight: '60px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          {lastKey || '按任意键开始'}
+        </div>
+      </div>
+
+      {/* 按键历史 */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h4>📜 按键历史 (最近10个)</h4>
+        <div style={{
+          padding: '1rem',
+          backgroundColor: '#fff7e6',
+          border: '1px solid #ffd591',
+          borderRadius: '4px',
+          minHeight: '60px',
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '0.5rem'
+        }}>
+          {keyHistory.length === 0 ? (
+            <span style={{ color: '#999' }}>暂无按键历史</span>
+          ) : (
+            keyHistory.map((key, index) => (
+              <span
+                key={`${key}-${index}`}
+                style={{
+                  padding: '0.25rem 0.5rem',
+                  backgroundColor: '#fa8c16',
+                  color: 'white',
+                  borderRadius: '4px',
+                  fontSize: '0.875rem',
+                  fontFamily: 'monospace',
+                  opacity: 0.6 + (index / keyHistory.length) * 0.4
+                }}
+              >
+                {key}
+              </span>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* 快捷键示例 */}
+      <div>
+        <h5>⚡ 特殊功能</h5>
+        <div style={{
+          padding: '1rem',
+          backgroundColor: '#f9f0ff',
+          border: '1px solid #d3adf7',
+          borderRadius: '4px'
+        }}>
+          <div style={{ marginBottom: '0.5rem' }}>
+            <strong>Escape</strong> - 清除所有记录
+          </div>
+          <div style={{ fontSize: '0.875rem', color: '#666' }}>
+            按下 ESC 键可以清除按键历史和当前按下的键
+          </div>
+        </div>
+      </div>
+
+      <div style={{ marginTop: '1rem', fontSize: '0.875rem', color: '#666' }}>
+        💡 在此页面按任意键试试，观察各种键盘事件的实时响应
+      </div>
     </div>
   )
 }

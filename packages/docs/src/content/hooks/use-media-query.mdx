@@ -19,15 +19,56 @@ import { MediaQueryExample } from '@/components/examples';
 import { useMediaQuery } from 'arrow-hooks'
 
 function App() {
-  const isMobile = useMediaQuery('(max-width: 768px)')
+  // 屏幕尺寸查询
+  const isLargeScreen = useMediaQuery('(min-width: 1024px)')
+  const isMediumScreen = useMediaQuery('(min-width: 768px) and (max-width: 1023px)')
+  const isSmallScreen = useMediaQuery('(max-width: 767px)')
+
+  // 设备特征查询
+  const isRetina = useMediaQuery('(min-resolution: 2dppx)')
+  const isLandscape = useMediaQuery('(orientation: landscape)')
+  const canHover = useMediaQuery('(hover: hover)')
 
   return (
-    <div>
-      {isMobile ? (
-        <div>移动端布局</div>
-      ) : (
-        <div>桌面端布局</div>
-      )}
+    <div style={{ padding: '1rem' }}>
+      {/* 屏幕尺寸检测 */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h4>📱 屏幕尺寸检测</h4>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <span style={{
+            padding: '0.5rem',
+            backgroundColor: isLargeScreen ? '#1890ff' : '#f5f5f5',
+            color: isLargeScreen ? 'white' : '#666',
+            borderRadius: '4px'
+          }}>
+            🖥️ 大屏幕 {isLargeScreen ? '✓' : '✗'}
+          </span>
+          <span style={{
+            padding: '0.5rem',
+            backgroundColor: isMediumScreen ? '#52c41a' : '#f5f5f5',
+            color: isMediumScreen ? 'white' : '#666',
+            borderRadius: '4px'
+          }}>
+            💻 中屏幕 {isMediumScreen ? '✓' : '✗'}
+          </span>
+          <span style={{
+            padding: '0.5rem',
+            backgroundColor: isSmallScreen ? '#fa8c16' : '#f5f5f5',
+            color: isSmallScreen ? 'white' : '#666',
+            borderRadius: '4px'
+          }}>
+            📱 小屏幕 {isSmallScreen ? '✓' : '✗'}
+          </span>
+        </div>
+      </div>
+
+      {/* 设备特征 */}
+      <div>
+        <h4>🔧 设备特征</h4>
+        <p>高分辨率屏幕: {isRetina ? '✨ 是' : '📺 否'}</p>
+        <p>横屏模式: {isLandscape ? '📐 是' : '📱 否'}</p>
+        <p>支持悬停: {canHover ? '👆 是' : '📱 否'}</p>
+      </div>
     </div>
   )
 }
