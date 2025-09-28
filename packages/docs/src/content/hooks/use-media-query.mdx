@@ -1,0 +1,380 @@
+---
+title: useMediaQuery
+description: 用于响应媒体查询变化的 React Hook
+---
+
+import { MediaQueryExample } from '@/components/examples';
+
+# useMediaQuery
+
+用于响应媒体查询变化的 React Hook，提供实时的媒体查询匹配状态，支持所有标准的 CSS 媒体查询语法，常用于响应式设计、系统偏好检测和设备特征识别。
+
+## 在线演示
+
+<MediaQueryExample />
+
+## 基本用法
+
+```tsx tab="React 函数组件"
+import { useMediaQuery } from 'arrow-hooks'
+
+function App() {
+  const isMobile = useMediaQuery('(max-width: 768px)')
+
+  return (
+    <div>
+      {isMobile ? (
+        <div>移动端布局</div>
+      ) : (
+        <div>桌面端布局</div>
+      )}
+    </div>
+  )
+}
+```
+
+## 使用场景
+
+### 1. 响应式布局
+
+根据屏幕尺寸切换不同的布局模式：
+
+```tsx
+import { useMediaQuery } from 'arrow-hooks'
+
+function ResponsiveComponent() {
+  const isLargeScreen = useMediaQuery('(min-width: 1024px)')
+  const isMediumScreen = useMediaQuery('(min-width: 768px) and (max-width: 1023px)')
+  const isSmallScreen = useMediaQuery('(max-width: 767px)')
+
+  return (
+    <div>
+      {isLargeScreen && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+          {/* 4列布局 */}
+          <div>侧边栏</div>
+          <div>主内容</div>
+          <div>附加内容</div>
+          <div>广告区域</div>
+        </div>
+      )}
+
+      {isMediumScreen && (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr', gap: '1rem' }}>
+          {/* 2列布局 */}
+          <div>侧边栏</div>
+          <div>主内容</div>
+        </div>
+      )}
+
+      {isSmallScreen && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {/* 单列布局 */}
+          <div>主内容</div>
+          <div>侧边栏</div>
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+### 2. 系统主题检测
+
+检测用户的系统主题偏好：
+
+```tsx
+import { useMediaQuery } from 'arrow-hooks'
+
+function ThemeAwareComponent() {
+  const prefersDark = useMediaQuery('(prefers-color-scheme: dark)')
+
+  const theme = {
+    backgroundColor: prefersDark ? '#1a1a1a' : '#ffffff',
+    color: prefersDark ? '#ffffff' : '#000000',
+    borderColor: prefersDark ? '#333333' : '#e0e0e0'
+  }
+
+  return (
+    <div
+      style={{
+        ...theme,
+        padding: '2rem',
+        borderRadius: '8px',
+        border: `1px solid ${theme.borderColor}`,
+        transition: 'all 0.3s ease'
+      }}
+    >
+      <h3>自适应主题组件</h3>
+      <p>
+        当前主题: {prefersDark ? '🌙 深色模式' : '☀️ 浅色模式'}
+      </p>
+      <p>
+        这个组件会根据系统主题偏好自动调整外观
+      </p>
+    </div>
+  )
+}
+```
+
+### 3. 可访问性支持
+
+检测用户的可访问性偏好：
+
+```tsx
+import { useMediaQuery } from 'arrow-hooks'
+
+function AccessibleComponent() {
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
+  const prefersHighContrast = useMediaQuery('(prefers-contrast: high)')
+
+  return (
+    <div>
+      <button
+        style={{
+          padding: '1rem 2rem',
+          backgroundColor: prefersHighContrast ? '#000000' : '#1890ff',
+          color: prefersHighContrast ? '#ffffff' : '#ffffff',
+          border: prefersHighContrast ? '2px solid #ffffff' : 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+          // 根据用户偏好决定是否启用动画
+          transition: prefersReducedMotion ? 'none' : 'all 0.3s ease',
+          transform: prefersReducedMotion ? 'none' : 'scale(1)',
+        }}
+        onMouseEnter={(e) => {
+          if (!prefersReducedMotion) {
+            e.currentTarget.style.transform = 'scale(1.05)'
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!prefersReducedMotion) {
+            e.currentTarget.style.transform = 'scale(1)'
+          }
+        }}
+      >
+        {prefersReducedMotion ? '静态按钮' : '动画按钮'}
+      </button>
+
+      <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: '#666' }}>
+        {prefersReducedMotion && '✅ 已禁用动画效果'}
+        {prefersHighContrast && '✅ 已启用高对比度模式'}
+      </p>
+    </div>
+  )
+}
+```
+
+### 4. 设备特征检测
+
+检测设备的物理特征和交互能力：
+
+```tsx
+import { useMediaQuery } from 'arrow-hooks'
+
+function DeviceAwareComponent() {
+  const canHover = useMediaQuery('(hover: hover)')
+  const isRetina = useMediaQuery('(min-resolution: 2dppx)')
+  const isLandscape = useMediaQuery('(orientation: landscape)')
+  const isTouchDevice = useMediaQuery('(pointer: coarse)')
+
+  return (
+    <div style={{ padding: '1rem' }}>
+      <h3>设备特征检测</h3>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <h4>交互能力</h4>
+        {canHover ? (
+          <div>
+            <p>✅ 设备支持悬停操作</p>
+            <button
+              style={{
+                padding: '0.5rem 1rem',
+                backgroundColor: '#1890ff',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#096dd9'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#1890ff'
+              }}
+            >
+              悬停试试
+            </button>
+          </div>
+        ) : (
+          <div>
+            <p>📱 触摸设备，无悬停功能</p>
+            <button
+              style={{
+                padding: '1rem 2rem', // 触摸设备使用更大的点击区域
+                backgroundColor: '#1890ff',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                fontSize: '1.1rem'
+              }}
+            >
+              点击按钮
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <h4>显示特征</h4>
+        <p>屏幕分辨率: {isRetina ? '🎯 高分辨率 (Retina)' : '📺 标准分辨率'}</p>
+        <p>屏幕方向: {isLandscape ? '📐 横屏' : '📱 竖屏'}</p>
+      </div>
+
+      <div>
+        <h4>输入方式</h4>
+        <p>主要输入方式: {isTouchDevice ? '👆 触摸' : '🖱️ 鼠标/触控板'}</p>
+      </div>
+    </div>
+  )
+}
+```
+
+### 5. 打印样式适配
+
+为打印媒体提供特殊的样式和内容：
+
+```tsx
+import { useMediaQuery } from 'arrow-hooks'
+
+function PrintFriendlyComponent() {
+  const isPrint = useMediaQuery('print')
+
+  return (
+    <div>
+      <header style={{
+        display: isPrint ? 'none' : 'block',
+        padding: '1rem',
+        backgroundColor: '#f5f5f5'
+      }}>
+        <nav>
+          <a href="/">首页</a>
+          <a href="/about">关于</a>
+          <a href="/contact">联系</a>
+        </nav>
+      </header>
+
+      <main style={{ padding: '2rem' }}>
+        <h1>文章标题</h1>
+
+        {isPrint && (
+          <div style={{
+            borderBottom: '1px solid #000',
+            paddingBottom: '1rem',
+            marginBottom: '2rem'
+          }}>
+            <p><strong>打印时间:</strong> {new Date().toLocaleString()}</p>
+            <p><strong>网站:</strong> https://example.com</p>
+          </div>
+        )}
+
+        <article>
+          <p>这是文章的主要内容...</p>
+        </article>
+
+        {!isPrint && (
+          <aside style={{
+            marginTop: '2rem',
+            padding: '1rem',
+            backgroundColor: '#f0f8ff',
+            borderRadius: '4px'
+          }}>
+            <h3>相关推荐</h3>
+            <ul>
+              <li>推荐文章 1</li>
+              <li>推荐文章 2</li>
+              <li>推荐文章 3</li>
+            </ul>
+          </aside>
+        )}
+      </main>
+
+      <footer style={{
+        display: isPrint ? 'none' : 'block',
+        padding: '1rem',
+        backgroundColor: '#f5f5f5',
+        textAlign: 'center'
+      }}>
+        <p>&copy; 2024 网站名称</p>
+      </footer>
+    </div>
+  )
+}
+```
+
+## API 参考
+
+### 参数
+
+| 参数 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| query | string | - | CSS 媒体查询字符串 |
+
+### 返回值
+
+| 类型 | 描述 |
+|------|------|
+| boolean | 当前媒体查询是否匹配 |
+
+### 类型定义
+
+```tsx
+function useMediaQuery(query: string): boolean
+```
+
+### 常用媒体查询示例
+
+```tsx
+import { useMediaQuery } from 'arrow-hooks'
+
+// 屏幕尺寸
+const isMobile = useMediaQuery('(max-width: 767px)')
+const isTablet = useMediaQuery('(min-width: 768px) and (max-width: 1023px)')
+const isDesktop = useMediaQuery('(min-width: 1024px)')
+
+// 系统偏好
+const prefersDark = useMediaQuery('(prefers-color-scheme: dark)')
+const prefersLight = useMediaQuery('(prefers-color-scheme: light)')
+const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
+const prefersHighContrast = useMediaQuery('(prefers-contrast: high)')
+
+// 设备特征
+const isRetina = useMediaQuery('(min-resolution: 2dppx)')
+const isLandscape = useMediaQuery('(orientation: landscape)')
+const isPortrait = useMediaQuery('(orientation: portrait)')
+
+// 交互能力
+const canHover = useMediaQuery('(hover: hover)')
+const canNotHover = useMediaQuery('(hover: none)')
+const hasFinePointer = useMediaQuery('(pointer: fine)')
+const hasCoarsePointer = useMediaQuery('(pointer: coarse)')
+
+// 媒体类型
+const isScreen = useMediaQuery('screen')
+const isPrint = useMediaQuery('print')
+
+// 复合查询
+const isMobilePortrait = useMediaQuery('(max-width: 767px) and (orientation: portrait)')
+const isDesktopWithHover = useMediaQuery('(min-width: 1024px) and (hover: hover)')
+```
+
+## 注意事项
+
+- **兼容性**: 支持新旧版本的 MediaQueryList API，兼容所有现代浏览器
+- **实时更新**: 媒体查询状态变化时会自动更新组件
+- **SSR 兼容**: 在服务端渲染环境下返回 `false`
+- **性能优化**: 内部缓存 MediaQueryList 实例，避免重复创建
+- **自动清理**: 组件卸载时会自动移除事件监听器
+- **语法支持**: 支持所有标准的 CSS 媒体查询语法和特性
+- **系统偏好**: `prefers-*` 查询需要用户在系统设置中进行配置才会生效

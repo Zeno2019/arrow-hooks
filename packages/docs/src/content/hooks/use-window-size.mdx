@@ -1,0 +1,342 @@
+---
+title: useWindowSize
+description: 用于监听和获取窗口大小的 React Hook
+---
+
+import { WindowSizeExample } from '@/components/examples';
+
+# useWindowSize
+
+用于监听和获取窗口大小的 React Hook，提供实时的窗口宽度和高度信息，支持防抖优化以提升性能，常用于响应式布局和窗口尺寸相关的交互功能。
+
+## 在线演示
+
+<WindowSizeExample />
+
+## 基本用法
+
+```tsx tab="React 函数组件"
+import { useWindowSize } from 'arrow-hooks'
+
+function App() {
+  const { width, height } = useWindowSize()
+
+  return (
+    <div>
+      <p>窗口宽度: {width}px</p>
+      <p>窗口高度: {height}px</p>
+    </div>
+  )
+}
+```
+
+## 使用场景
+
+### 1. 响应式布局
+
+根据窗口尺寸动态调整布局：
+
+```tsx
+import { useWindowSize } from 'arrow-hooks'
+
+function ResponsiveLayout() {
+  const { width } = useWindowSize()
+
+  // 根据屏幕宽度确定列数
+  const getColumns = () => {
+    if (width < 576) return 1
+    if (width < 768) return 2
+    if (width < 1200) return 3
+    return 4
+  }
+
+  const columns = getColumns()
+
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(${columns}, 1fr)`,
+        gap: '1rem'
+      }}
+    >
+      {Array.from({ length: 12 }, (_, i) => (
+        <div key={i} style={{ padding: '1rem', backgroundColor: '#f5f5f5' }}>
+          卡片 {i + 1}
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+### 2. 屏幕类型检测
+
+检测当前屏幕类型以应用不同的样式：
+
+```tsx
+import { useWindowSize } from 'arrow-hooks'
+
+function ScreenTypeIndicator() {
+  const { width } = useWindowSize()
+
+  const getScreenType = () => {
+    if (width < 576) return { type: '手机', color: '#ff4d4f' }
+    if (width < 768) return { type: '平板', color: '#fa8c16' }
+    if (width < 992) return { type: '小屏幕', color: '#faad14' }
+    if (width < 1200) return { type: '中屏幕', color: '#52c41a' }
+    return { type: '大屏幕', color: '#1890ff' }
+  }
+
+  const { type, color } = getScreenType()
+
+  return (
+    <div
+      style={{
+        padding: '1rem',
+        backgroundColor: color + '15',
+        border: `2px solid ${color}`,
+        borderRadius: '8px',
+        textAlign: 'center'
+      }}
+    >
+      <h3 style={{ color, margin: 0 }}>当前设备: {type}</h3>
+      <p style={{ margin: '0.5rem 0 0 0' }}>窗口宽度: {width}px</p>
+    </div>
+  )
+}
+```
+
+### 3. 自适应组件大小
+
+根据窗口大小动态调整组件尺寸：
+
+```tsx
+import { useWindowSize } from 'arrow-hooks'
+
+function AdaptiveChart() {
+  const { width, height } = useWindowSize()
+
+  // 计算图表尺寸（保留边距）
+  const chartWidth = Math.min(width - 40, 800)
+  const chartHeight = Math.min(height * 0.6, 400)
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h3>自适应图表</h3>
+      <div
+        style={{
+          width: chartWidth,
+          height: chartHeight,
+          backgroundColor: '#f0f2f5',
+          border: '1px solid #d9d9d9',
+          borderRadius: '4px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: '0 auto'
+        }}
+      >
+        <div style={{ textAlign: 'center', color: '#666' }}>
+          <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>📊</div>
+          <div>图表区域</div>
+          <div style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
+            {chartWidth} × {chartHeight}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+### 4. 移动端优化
+
+为移动端设备提供特殊的交互体验：
+
+```tsx
+import { useWindowSize } from 'arrow-hooks'
+import { useState } from 'react'
+
+function MobileOptimizedComponent() {
+  const { width } = useWindowSize()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const isMobile = width < 768
+
+  return (
+    <div>
+      {/* 移动端使用汉堡菜单 */}
+      {isMobile ? (
+        <div>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            style={{
+              padding: '0.5rem',
+              backgroundColor: '#1890ff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px'
+            }}
+          >
+            {isMenuOpen ? '✕' : '☰'} 菜单
+          </button>
+          {isMenuOpen && (
+            <div
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                zIndex: 1000,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: 'white',
+                  padding: '2rem',
+                  borderRadius: '8px',
+                  width: '80%',
+                  maxWidth: '300px'
+                }}
+              >
+                <h3>移动菜单</h3>
+                <ul style={{ listStyle: 'none', padding: 0 }}>
+                  <li style={{ padding: '0.5rem 0' }}>首页</li>
+                  <li style={{ padding: '0.5rem 0' }}>关于</li>
+                  <li style={{ padding: '0.5rem 0' }}>联系</li>
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        /* 桌面端使用水平菜单 */
+        <nav
+          style={{
+            display: 'flex',
+            gap: '2rem',
+            padding: '1rem',
+            backgroundColor: '#f5f5f5'
+          }}
+        >
+          <a href="/">首页</a>
+          <a href="/about">关于</a>
+          <a href="/contact">联系</a>
+        </nav>
+      )}
+    </div>
+  )
+}
+```
+
+### 5. 虚拟滚动优化
+
+根据窗口高度计算可见项目数量：
+
+```tsx
+import { useWindowSize } from 'arrow-hooks'
+import { useMemo } from 'react'
+
+function VirtualList({ items }: { items: string[] }) {
+  const { height } = useWindowSize()
+
+  // 计算可见项目数量
+  const visibleCount = useMemo(() => {
+    const itemHeight = 50 // 每项高度
+    const containerHeight = height - 200 // 减去头部和其他元素高度
+    return Math.ceil(containerHeight / itemHeight) + 2 // 多渲染2项缓冲
+  }, [height])
+
+  return (
+    <div>
+      <h3>虚拟滚动列表</h3>
+      <div
+        style={{
+          height: height - 200,
+          overflowY: 'auto',
+          border: '1px solid #d9d9d9',
+          borderRadius: '4px'
+        }}
+      >
+        {items.slice(0, visibleCount).map((item, index) => (
+          <div
+            key={index}
+            style={{
+              height: '50px',
+              padding: '0 1rem',
+              display: 'flex',
+              alignItems: 'center',
+              borderBottom: '1px solid #f0f0f0'
+            }}
+          >
+            {item}
+          </div>
+        ))}
+      </div>
+      <p style={{ fontSize: '0.875rem', color: '#666' }}>
+        显示 {visibleCount} / {items.length} 项
+      </p>
+    </div>
+  )
+}
+```
+
+## API 参考
+
+### 参数
+
+| 参数 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| delay | number | 200 | 防抖延迟时间（毫秒） |
+
+### 返回值
+
+| 属性 | 类型 | 描述 |
+|------|------|------|
+| width | number | 当前窗口宽度（像素） |
+| height | number | 当前窗口高度（像素） |
+
+### 类型定义
+
+```tsx
+type WindowSize = {
+  width: number
+  height: number
+}
+
+function useWindowSize(delay?: number): WindowSize
+```
+
+### 使用示例
+
+```tsx
+import { useWindowSize } from 'arrow-hooks'
+
+// 基础用法（默认 200ms 防抖）
+const { width, height } = useWindowSize()
+
+// 自定义防抖时间
+const { width: fastWidth, height: fastHeight } = useWindowSize(100)
+const { width: slowWidth, height: slowHeight } = useWindowSize(500)
+
+// 计算宽高比
+const aspectRatio = (width / height).toFixed(2)
+
+// 判断屏幕方向
+const isLandscape = width > height
+const isPortrait = height > width
+```
+
+## 注意事项
+
+- **防抖优化**: 默认使用 200ms 防抖延迟，避免频繁的窗口大小变化导致性能问题
+- **SSR 兼容**: 在服务端渲染环境下返回默认值 `{ width: 0, height: 0 }`
+- **初始化**: 组件挂载后会立即获取当前窗口尺寸
+- **内存管理**: 组件卸载时会自动清理事件监听器和防抖函数
+- **性能考虑**: 对于高频更新场景，建议增加防抖延迟时间
+- **兼容性**: 基于 `window.innerWidth` 和 `window.innerHeight`，兼容所有现代浏览器

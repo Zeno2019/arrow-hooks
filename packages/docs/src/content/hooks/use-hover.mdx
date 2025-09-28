@@ -1,0 +1,322 @@
+---
+title: useHover
+description: 用于检测元素悬停状态的 React Hook
+---
+
+import { HoverExample } from '@/components/examples';
+
+# useHover
+
+用于检测元素悬停状态的 React Hook，提供简洁的 API 来监听鼠标的 mouseenter 和 mouseleave 事件，常用于实现交互式 UI 效果。
+
+## 在线演示
+
+<HoverExample />
+
+## 基本用法
+
+```tsx tab="React 函数组件"
+import { useHover } from 'arrow-hooks'
+import { useRef } from 'react'
+
+function App() {
+  const hoverRef = useRef<HTMLDivElement>(null)
+  const isHovered = useHover(hoverRef)
+
+  return (
+    <div
+      ref={hoverRef}
+      style={{
+        padding: '20px',
+        backgroundColor: isHovered ? '#e6f7ff' : '#f5f5f5',
+        transition: 'background-color 0.3s'
+      }}
+    >
+      {isHovered ? '鼠标悬停中' : '悬停在我上面'}
+    </div>
+  )
+}
+```
+
+## 使用场景
+
+### 1. 卡片悬停效果
+
+为卡片组件添加悬停交互效果：
+
+```tsx
+import { useHover } from 'arrow-hooks'
+import { useRef } from 'react'
+
+function Card({ title, content }: { title: string; content: string }) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  const isHovered = useHover(cardRef)
+
+  return (
+    <div
+      ref={cardRef}
+      style={{
+        padding: '1.5rem',
+        borderRadius: '8px',
+        backgroundColor: 'white',
+        boxShadow: isHovered
+          ? '0 8px 24px rgba(0, 0, 0, 0.15)'
+          : '0 2px 8px rgba(0, 0, 0, 0.08)',
+        transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
+        transition: 'all 0.3s ease',
+        cursor: 'pointer'
+      }}
+    >
+      <h3 style={{
+        color: isHovered ? '#1890ff' : '#333',
+        transition: 'color 0.3s'
+      }}>
+        {title}
+      </h3>
+      <p>{content}</p>
+    </div>
+  )
+}
+```
+
+### 2. 按钮悬停状态
+
+创建带有悬停效果的按钮组件：
+
+```tsx
+import { useHover } from 'arrow-hooks'
+import { useRef } from 'react'
+
+function InteractiveButton({ children, onClick }: {
+  children: React.ReactNode
+  onClick: () => void
+}) {
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const isHovered = useHover(buttonRef)
+
+  return (
+    <button
+      ref={buttonRef}
+      onClick={onClick}
+      style={{
+        padding: '0.75rem 1.5rem',
+        fontSize: '1rem',
+        backgroundColor: isHovered ? '#096dd9' : '#1890ff',
+        color: 'white',
+        border: 'none',
+        borderRadius: '6px',
+        cursor: 'pointer',
+        transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+        transition: 'all 0.2s ease'
+      }}
+    >
+      {children}
+    </button>
+  )
+}
+```
+
+### 3. 图片画廊悬停
+
+为图片添加悬停时的放大和遮罩效果：
+
+```tsx
+import { useHover } from 'arrow-hooks'
+import { useRef } from 'react'
+
+function ImageGalleryItem({ src, alt }: { src: string; alt: string }) {
+  const imageRef = useRef<HTMLDivElement>(null)
+  const isHovered = useHover(imageRef)
+
+  return (
+    <div
+      ref={imageRef}
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        borderRadius: '8px',
+        cursor: 'pointer'
+      }}
+    >
+      <img
+        src={src}
+        alt={alt}
+        style={{
+          width: '100%',
+          height: '200px',
+          objectFit: 'cover',
+          transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+          transition: 'transform 0.3s ease'
+        }}
+      />
+      {isHovered && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontSize: '1.2rem'
+          }}
+        >
+          🔍 查看详情
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+### 4. 导航菜单悬停
+
+为导航菜单项添加悬停效果：
+
+```tsx
+import { useHover } from 'arrow-hooks'
+import { useRef } from 'react'
+
+function NavigationItem({ label, href }: { label: string; href: string }) {
+  const linkRef = useRef<HTMLAnchorElement>(null)
+  const isHovered = useHover(linkRef)
+
+  return (
+    <a
+      ref={linkRef}
+      href={href}
+      style={{
+        display: 'block',
+        padding: '0.75rem 1rem',
+        textDecoration: 'none',
+        color: isHovered ? '#1890ff' : '#333',
+        backgroundColor: isHovered ? '#f0f8ff' : 'transparent',
+        borderLeft: isHovered ? '3px solid #1890ff' : '3px solid transparent',
+        transition: 'all 0.2s ease'
+      }}
+    >
+      {label}
+    </a>
+  )
+}
+```
+
+### 5. 工具提示触发
+
+结合悬停状态显示工具提示：
+
+```tsx
+import { useHover } from 'arrow-hooks'
+import { useRef } from 'react'
+
+function TooltipTrigger({
+  children,
+  tooltip
+}: {
+  children: React.ReactNode
+  tooltip: string
+}) {
+  const triggerRef = useRef<HTMLSpanElement>(null)
+  const isHovered = useHover(triggerRef)
+
+  return (
+    <span
+      ref={triggerRef}
+      style={{
+        position: 'relative',
+        display: 'inline-block',
+        cursor: 'help'
+      }}
+    >
+      {children}
+      {isHovered && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '-40px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            padding: '0.5rem',
+            backgroundColor: '#333',
+            color: 'white',
+            borderRadius: '4px',
+            fontSize: '0.875rem',
+            whiteSpace: 'nowrap',
+            zIndex: 1000
+          }}
+        >
+          {tooltip}
+          <div
+            style={{
+              position: 'absolute',
+              top: '100%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 0,
+              height: 0,
+              borderLeft: '5px solid transparent',
+              borderRight: '5px solid transparent',
+              borderTop: '5px solid #333'
+            }}
+          />
+        </div>
+      )}
+    </span>
+  )
+}
+```
+
+## API 参考
+
+### 参数
+
+| 参数 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| elementRef | RefObject\<T extends HTMLElement\> | - | 要监听悬停状态的元素引用 |
+
+### 返回值
+
+| 类型 | 描述 |
+|------|------|
+| boolean | 当前元素是否处于悬停状态 |
+
+### 类型定义
+
+```tsx
+function useHover<T extends HTMLElement>(
+  elementRef: RefObject<T>
+): boolean
+```
+
+### 使用示例
+
+```tsx
+import { useHover } from 'arrow-hooks'
+import { useRef } from 'react'
+
+// 基础用法
+const elementRef = useRef<HTMLDivElement>(null)
+const isHovered = useHover(elementRef)
+
+// 结合多种元素类型
+const buttonRef = useRef<HTMLButtonElement>(null)
+const imageRef = useRef<HTMLImageElement>(null)
+const linkRef = useRef<HTMLAnchorElement>(null)
+
+const isButtonHovered = useHover(buttonRef)
+const isImageHovered = useHover(imageRef)
+const isLinkHovered = useHover(linkRef)
+```
+
+## 注意事项
+
+- **元素引用**: 必须确保传入的 ref 已经绑定到 DOM 元素
+- **自动清理**: 组件卸载时会自动移除事件监听器
+- **类型安全**: 支持所有 HTMLElement 类型，提供完整的 TypeScript 类型推断
+- **性能优化**: 内部使用 useEffect 和 useState 进行状态管理，避免不必要的重渲染
+- **兼容性**: 基于标准的 mouseenter 和 mouseleave 事件，兼容所有现代浏览器
+- **触摸设备**: 在触摸设备上可能表现不同，建议结合触摸事件处理移动端交互
