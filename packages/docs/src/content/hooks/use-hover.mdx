@@ -145,101 +145,7 @@ function Card({ title, content }: { title: string; content: string }) {
 }
 ```
 
-### 2. 按钮悬停状态
-
-创建带有悬停效果的按钮组件：
-
-```tsx
-import { useHover } from 'arrow-hooks'
-import { useRef } from 'react'
-
-function InteractiveButton({ children, onClick }: {
-  children: React.ReactNode
-  onClick: () => void
-}) {
-  const buttonRef = useRef<HTMLButtonElement>(null)
-  const isHovered = useHover(buttonRef)
-
-  return (
-    <button
-      ref={buttonRef}
-      onClick={onClick}
-      style={{
-        padding: '0.75rem 1.5rem',
-        fontSize: '1rem',
-        backgroundColor: isHovered ? '#096dd9' : '#1890ff',
-        color: 'white',
-        border: 'none',
-        borderRadius: '6px',
-        cursor: 'pointer',
-        transform: isHovered ? 'scale(1.05)' : 'scale(1)',
-        transition: 'all 0.2s ease'
-      }}
-    >
-      {children}
-    </button>
-  )
-}
-```
-
-### 3. 图片画廊悬停
-
-为图片添加悬停时的放大和遮罩效果：
-
-```tsx
-import { useHover } from 'arrow-hooks'
-import { useRef } from 'react'
-
-function ImageGalleryItem({ src, alt }: { src: string; alt: string }) {
-  const imageRef = useRef<HTMLDivElement>(null)
-  const isHovered = useHover(imageRef)
-
-  return (
-    <div
-      ref={imageRef}
-      style={{
-        position: 'relative',
-        overflow: 'hidden',
-        borderRadius: '8px',
-        cursor: 'pointer'
-      }}
-    >
-      <img
-        src={src}
-        alt={alt}
-        style={{
-          width: '100%',
-          height: '200px',
-          objectFit: 'cover',
-          transform: isHovered ? 'scale(1.1)' : 'scale(1)',
-          transition: 'transform 0.3s ease'
-        }}
-      />
-      {isHovered && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.3)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontSize: '1.2rem'
-          }}
-        >
-          🔍 查看详情
-        </div>
-      )}
-    </div>
-  )
-}
-```
-
-### 4. 导航菜单悬停
+### 2. 导航菜单悬停
 
 为导航菜单项添加悬停效果：
 
@@ -271,7 +177,7 @@ function NavigationItem({ label, href }: { label: string; href: string }) {
 }
 ```
 
-### 5. 工具提示触发
+### 3. 工具提示触发
 
 结合悬停状态显示工具提示：
 
