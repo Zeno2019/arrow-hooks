@@ -1,0 +1,467 @@
+---
+title: useInfiniteScroll
+description: 用于实现无限滚动的 React Hook
+---
+
+import { InfiniteScrollExample } from '@/components/examples';
+
+# useInfiniteScroll
+
+用于实现无限滚动的 React Hook，基于 useIntersectionObserver 和防抖技术，当滚动到底部时自动加载更多数据，常用于新闻流、商品列表、社交媒体动态等场景。
+
+## 在线演示
+
+<InfiniteScrollExample />
+
+## 基本用法
+
+```tsx tab="React 函数组件"
+import { useInfiniteScroll } from 'arrow-hooks'
+import { useRef, useState, useCallback } from 'react'
+
+function App() {
+  const [items, setItems] = useState<string[]>([])
+  const [hasMore, setHasMore] = useState(true)
+  const loaderRef = useRef<HTMLDivElement>(null)
+
+  const loadMore = useCallback(async () => {
+    // 模拟 API 请求
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    const newItems = Array.from({ length: 10 }, (_, i) =>
+      `Item ${items.length + i + 1}`
+    )
+
+    setItems(prev => [...prev, ...newItems])
+
+    // 模拟数据上限
+    if (items.length + newItems.length >= 100) {
+      setHasMore(false)
+    }
+  }, [items.length])
+
+  const isLoading = useInfiniteScroll(loaderRef, loadMore, {
+    hasMore,
+    threshold: 0.5
+  })
+
+  return (
+    <div style={{ height: '400px', overflowY: 'auto' }}>
+      {items.map((item, index) => (
+        <div key={index} style={{ padding: '1rem', borderBottom: '1px solid #eee' }}>
+          {item}
+        </div>
+      ))}
+
+      <div ref={loaderRef} style={{ padding: '1rem', textAlign: 'center' }}>
+        {isLoading ? '加载中...' : hasMore ? '滚动加载更多' : '没有更多了'}
+      </div>
+    </div>
+  )
+}
+```
+
+## 使用场景
+
+### 1. 商品列表
+
+电商网站的商品无限滚动加载：
+
+```tsx
+import { useInfiniteScroll } from 'arrow-hooks'
+import { useRef, useState, useCallback } from 'react'
+
+interface Product {
+  id: number
+  name: string
+  price: number
+  image: string
+}
+
+function ProductList() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [hasMore, setHasMore] = useState(true)
+  const [page, setPage] = useState(1)
+  const loaderRef = useRef<HTMLDivElement>(null)
+
+  const loadProducts = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/products?page=${page}&limit=20`)
+      const data = await response.json()
+
+      if (data.products.length === 0) {
+        setHasMore(false)
+        return
+      }
+
+      setProducts(prev => [...prev, ...data.products])
+      setPage(prev => prev + 1)
+
+      // 检查是否还有更多数据
+      if (data.products.length < 20) {
+        setHasMore(false)
+      }
+    } catch (error) {
+      console.error('加载商品失败:', error)
+    }
+  }, [page])
+
+  const isLoading = useInfiniteScroll(loaderRef, loadProducts, {
+    hasMore,
+    threshold: 0.3,
+    rootMargin: '100px'
+  })
+
+  return (
+    <div className="product-grid">
+      {products.map(product => (
+        <div key={product.id} className="product-card">
+          <img src={product.image} alt={product.name} />
+          <h3>{product.name}</h3>
+          <p className="price">¥{product.price}</p>
+        </div>
+      ))}
+
+      <div ref={loaderRef} className="loader">
+        {isLoading && <div className="loading-spinner">加载中...</div>}
+        {!hasMore && <div className="no-more">没有更多商品了</div>}
+      </div>
+    </div>
+  )
+}
+```
+
+### 2. 社交媒体动态
+
+类似微博、朋友圈的动态流：
+
+```tsx
+import { useInfiniteScroll } from 'arrow-hooks'
+import { useRef, useState, useCallback } from 'react'
+
+interface Post {
+  id: string
+  user: string
+  content: string
+  timestamp: string
+  likes: number
+}
+
+function SocialFeed() {
+  const [posts, setPosts] = useState<Post[]>([])
+  const [hasMore, setHasMore] = useState(true)
+  const [lastId, setLastId] = useState<string>('')
+  const loaderRef = useRef<HTMLDivElement>(null)
+
+  const loadPosts = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/posts?lastId=${lastId}&limit=10`)
+      const data = await response.json()
+
+      if (data.posts.length === 0) {
+        setHasMore(false)
+        return
+      }
+
+      setPosts(prev => [...prev, ...data.posts])
+      setLastId(data.posts[data.posts.length - 1].id)
+
+      if (data.posts.length < 10) {
+        setHasMore(false)
+      }
+    } catch (error) {
+      console.error('加载动态失败:', error)
+    }
+  }, [lastId])
+
+  const isLoading = useInfiniteScroll(loaderRef, loadPosts, {
+    hasMore,
+    delay: 300, // 300ms 防抖
+    threshold: 0.5
+  })
+
+  return (
+    <div className="social-feed">
+      {posts.map(post => (
+        <article key={post.id} className="post">
+          <header>
+            <strong>{post.user}</strong>
+            <time>{post.timestamp}</time>
+          </header>
+          <p>{post.content}</p>
+          <footer>
+            <button>👍 {post.likes}</button>
+            <button>💬 评论</button>
+            <button>🔄 转发</button>
+          </footer>
+        </article>
+      ))}
+
+      <div ref={loaderRef} className="load-more">
+        {isLoading ? (
+          <div>📱 正在加载新动态...</div>
+        ) : hasMore ? (
+          <div>👇 继续滑动查看更多</div>
+        ) : (
+          <div>🎉 你已经看完所有动态了</div>
+        )}
+      </div>
+    </div>
+  )
+}
+```
+
+### 3. 搜索结果页
+
+搜索结果的分页加载：
+
+```tsx
+import { useInfiniteScroll } from 'arrow-hooks'
+import { useRef, useState, useCallback, useEffect } from 'react'
+
+interface SearchResult {
+  id: string
+  title: string
+  description: string
+  url: string
+}
+
+function SearchResults({ query }: { query: string }) {
+  const [results, setResults] = useState<SearchResult[]>([])
+  const [hasMore, setHasMore] = useState(true)
+  const [page, setPage] = useState(1)
+  const loaderRef = useRef<HTMLDivElement>(null)
+
+  // 重置搜索结果
+  useEffect(() => {
+    setResults([])
+    setPage(1)
+    setHasMore(true)
+  }, [query])
+
+  const searchMore = useCallback(async () => {
+    if (!query.trim()) return
+
+    try {
+      const response = await fetch(
+        `/api/search?q=${encodeURIComponent(query)}&page=${page}&limit=10`
+      )
+      const data = await response.json()
+
+      if (data.results.length === 0) {
+        setHasMore(false)
+        return
+      }
+
+      setResults(prev => page === 1 ? data.results : [...prev, ...data.results])
+      setPage(prev => prev + 1)
+
+      if (data.results.length < 10) {
+        setHasMore(false)
+      }
+    } catch (error) {
+      console.error('搜索失败:', error)
+    }
+  }, [query, page])
+
+  const isLoading = useInfiniteScroll(loaderRef, searchMore, {
+    hasMore: hasMore && query.trim() !== '',
+    threshold: 0.8,
+    delay: 500
+  })
+
+  if (!query.trim()) {
+    return <div className="search-placeholder">请输入搜索关键词</div>
+  }
+
+  return (
+    <div className="search-results">
+      <div className="results-info">
+        找到 {results.length}+ 个结果，搜索：{query}
+      </div>
+
+      {results.map(result => (
+        <div key={result.id} className="result-item">
+          <h3>
+            <a href={result.url} target="_blank" rel="noopener noreferrer">
+              {result.title}
+            </a>
+          </h3>
+          <p>{result.description}</p>
+          <cite>{result.url}</cite>
+        </div>
+      ))}
+
+      <div ref={loaderRef} className="search-loader">
+        {isLoading ? (
+          <div>🔍 搜索更多结果...</div>
+        ) : hasMore ? (
+          <div>继续滚动查看更多结果</div>
+        ) : (
+          <div>已显示所有搜索结果</div>
+        )}
+      </div>
+    </div>
+  )
+}
+```
+
+### 4. 图片画廊
+
+图片懒加载的无限滚动画廊：
+
+```tsx
+import { useInfiniteScroll } from 'arrow-hooks'
+import { useRef, useState, useCallback } from 'react'
+
+interface Photo {
+  id: string
+  url: string
+  thumbnail: string
+  title: string
+  photographer: string
+}
+
+function PhotoGallery() {
+  const [photos, setPhotos] = useState<Photo[]>([])
+  const [hasMore, setHasMore] = useState(true)
+  const [page, setPage] = useState(1)
+  const loaderRef = useRef<HTMLDivElement>(null)
+
+  const loadPhotos = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/photos?page=${page}&per_page=12`)
+      const data = await response.json()
+
+      if (data.photos.length === 0) {
+        setHasMore(false)
+        return
+      }
+
+      setPhotos(prev => [...prev, ...data.photos])
+      setPage(prev => prev + 1)
+
+      if (data.photos.length < 12) {
+        setHasMore(false)
+      }
+    } catch (error) {
+      console.error('加载图片失败:', error)
+    }
+  }, [page])
+
+  const isLoading = useInfiniteScroll(loaderRef, loadPhotos, {
+    hasMore,
+    threshold: 0.2, // 更早开始加载
+    rootMargin: '200px' // 提前200px开始加载
+  })
+
+  return (
+    <div className="photo-gallery">
+      <div className="gallery-grid">
+        {photos.map(photo => (
+          <div key={photo.id} className="photo-item">
+            <img
+              src={photo.thumbnail}
+              alt={photo.title}
+              loading="lazy"
+              onClick={() => openLightbox(photo.url)}
+            />
+            <div className="photo-info">
+              <h4>{photo.title}</h4>
+              <p>by {photo.photographer}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div ref={loaderRef} className="gallery-loader">
+        {isLoading ? (
+          <div className="loading-grid">
+            {Array.from({ length: 4 }, (_, i) => (
+              <div key={i} className="loading-placeholder" />
+            ))}
+          </div>
+        ) : hasMore ? (
+          <div>继续浏览更多精美图片</div>
+        ) : (
+          <div>🎨 已浏览完所有图片</div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function openLightbox(url: string) {
+  // 打开图片灯箱
+}
+```
+
+## API 参考
+
+### 参数
+
+| 参数 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| targetRef | RefObject\<Element\> | - | 触发元素的引用（通常是加载指示器） |
+| onLoadMore | () => Promise\<void\> \| void | - | 加载更多数据的回调函数 |
+| options | UseInfiniteScrollOptions | {} | 配置选项 |
+
+### 返回值
+
+| 类型 | 描述 |
+|------|------|
+| boolean | 是否正在加载中 |
+
+### 配置选项
+
+```tsx
+interface UseInfiniteScrollOptions extends IntersectionObserverInit {
+  hasMore?: boolean    // 是否还有更多数据，默认 true
+  isLoading?: boolean  // 外部加载状态，默认 false
+  delay?: number       // 防抖延迟时间（毫秒），默认 100
+}
+
+// 继承的 IntersectionObserverInit 选项：
+interface IntersectionObserverInit {
+  threshold?: number | number[]  // 触发阈值，默认 0.5
+  rootMargin?: string           // 根边距，默认 '0px'
+  root?: Element | null         // 根元素，默认为视口
+}
+```
+
+### 使用示例
+
+```tsx
+import { useInfiniteScroll } from 'arrow-hooks'
+
+// 基础用法
+const isLoading = useInfiniteScroll(loaderRef, loadMore, {
+  hasMore: true
+})
+
+// 自定义触发条件
+const isLoading = useInfiniteScroll(loaderRef, loadMore, {
+  hasMore: items.length < totalCount,
+  threshold: 0.8,      // 80% 可见时触发
+  rootMargin: '100px', // 提前 100px 触发
+  delay: 300          // 300ms 防抖
+})
+
+// 结合外部加载状态
+const isLoading = useInfiniteScroll(loaderRef, loadMore, {
+  hasMore: hasMoreData,
+  isLoading: externalLoadingState,
+  delay: 500
+})
+```
+
+## 注意事项
+
+- **防抖优化**: 内置防抖机制，避免快速滚动时的重复请求
+- **错误处理**: 建议在 onLoadMore 中添加错误处理逻辑
+- **加载状态**: 返回的 isLoading 状态用于显示加载指示器
+- **性能考虑**: 大量数据时考虑虚拟滚动技术优化性能
+- **网络优化**: 可以结合预加载和缓存策略提升用户体验
+- **触发位置**: 通过 threshold 和 rootMargin 控制何时开始加载
+- **数据去重**: 确保 API 返回的数据没有重复项
+- **内存管理**: 大量数据时考虑实现数据回收机制

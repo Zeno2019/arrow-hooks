@@ -1,0 +1,358 @@
+---
+title: useResizeObserver
+description: 用于监听 DOM 元素尺寸变化的 React Hook
+---
+
+import { ResizeObserverExample } from '@/components/examples';
+
+# useResizeObserver
+
+用于监听 DOM 元素尺寸变化的 React Hook，基于 ResizeObserver API，当元素的尺寸发生变化时执行回调函数，常用于响应式布局、图表自适应、容器查询等场景。
+
+## 在线演示
+
+<ResizeObserverExample />
+
+## 基本用法
+
+```tsx tab="React 函数组件"
+import { useResizeObserver } from 'arrow-hooks'
+import { useRef, useState } from 'react'
+
+function App() {
+  const elementRef = useRef<HTMLDivElement>(null)
+  const [size, setSize] = useState({ width: 0, height: 0 })
+
+  useResizeObserver(elementRef, (entry) => {
+    const { width, height } = entry.contentRect
+    setSize({ width, height })
+  })
+
+  return (
+    <div>
+      <div
+        ref={elementRef}
+        style={{
+          width: '300px',
+          height: '200px',
+          resize: 'both',
+          overflow: 'auto',
+          border: '1px solid #ccc'
+        }}
+      >
+        拖拽右下角调整大小
+      </div>
+      <p>尺寸: {Math.round(size.width)} × {Math.round(size.height)}</p>
+    </div>
+  )
+}
+```
+
+## 使用场景
+
+### 1. 响应式图表
+
+根据容器尺寸自动调整图表大小：
+
+```tsx
+import { useResizeObserver } from 'arrow-hooks'
+import { useRef, useState, useEffect } from 'react'
+
+function ResponsiveChart() {
+  const chartRef = useRef<HTMLDivElement>(null)
+  const [chartSize, setChartSize] = useState({ width: 0, height: 0 })
+
+  useResizeObserver(chartRef, (entry) => {
+    const { width, height } = entry.contentRect
+    setChartSize({ width, height })
+  })
+
+  useEffect(() => {
+    if (chartSize.width > 0 && chartSize.height > 0) {
+      // 重新渲染图表
+      renderChart(chartSize.width, chartSize.height)
+    }
+  }, [chartSize])
+
+  const renderChart = (width: number, height: number) => {
+    // 图表渲染逻辑
+    console.log(`渲染图表: ${width} × ${height}`)
+  }
+
+  return (
+    <div
+      ref={chartRef}
+      style={{
+        width: '100%',
+        height: '400px',
+        border: '1px solid #e0e0e0',
+        borderRadius: '4px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>📊</div>
+        <div>图表区域</div>
+        <div style={{ fontSize: '0.875rem', color: '#666' }}>
+          {Math.round(chartSize.width)} × {Math.round(chartSize.height)}
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+### 2. 容器查询模拟
+
+根据容器尺寸切换不同的布局：
+
+```tsx
+import { useResizeObserver } from 'arrow-hooks'
+import { useRef, useState } from 'react'
+
+function ContainerQuery({ children }: { children: React.ReactNode }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [containerWidth, setContainerWidth] = useState(0)
+
+  useResizeObserver(containerRef, (entry) => {
+    setContainerWidth(entry.contentRect.width)
+  })
+
+  // 根据容器宽度决定布局
+  const getLayout = () => {
+    if (containerWidth < 300) return 'stack'
+    if (containerWidth < 600) return 'sidebar'
+    return 'grid'
+  }
+
+  const layout = getLayout()
+
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        width: '100%',
+        padding: '1rem',
+        border: '1px solid #e0e0e0',
+        borderRadius: '4px'
+      }}
+      data-layout={layout}
+    >
+      <div style={{
+        display: layout === 'stack' ? 'block' :
+                layout === 'sidebar' ? 'flex' : 'grid',
+        gridTemplateColumns: layout === 'grid' ? 'repeat(3, 1fr)' : undefined,
+        gap: '1rem'
+      }}>
+        {children}
+      </div>
+      <div style={{
+        marginTop: '1rem',
+        fontSize: '0.875rem',
+        color: '#666',
+        textAlign: 'center'
+      }}>
+        容器宽度: {Math.round(containerWidth)}px | 布局模式: {layout}
+      </div>
+    </div>
+  )
+}
+```
+
+### 3. 自适应文本大小
+
+根据容器大小调整文字尺寸：
+
+```tsx
+import { useResizeObserver } from 'arrow-hooks'
+import { useRef, useState, useMemo } from 'react'
+
+function AdaptiveText({ text }: { text: string }) {
+  const textRef = useRef<HTMLDivElement>(null)
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 })
+
+  useResizeObserver(textRef, (entry) => {
+    const { width, height } = entry.contentRect
+    setContainerSize({ width, height })
+  })
+
+  const fontSize = useMemo(() => {
+    const baseSize = 16
+    const minSize = 12
+    const maxSize = 48
+
+    // 根据容器宽度计算字体大小
+    const calculatedSize = Math.min(containerSize.width / text.length * 2,
+                                   containerSize.height * 0.8)
+
+    return Math.max(minSize, Math.min(maxSize, calculatedSize))
+  }, [containerSize, text])
+
+  return (
+    <div
+      ref={textRef}
+      style={{
+        width: '100%',
+        height: '200px',
+        border: '1px solid #e0e0e0',
+        borderRadius: '4px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        resize: 'both',
+        overflow: 'hidden'
+      }}
+    >
+      <div
+        style={{
+          fontSize: `${fontSize}px`,
+          fontWeight: 'bold',
+          textAlign: 'center',
+          transition: 'font-size 0.2s ease'
+        }}
+      >
+        {text}
+      </div>
+    </div>
+  )
+}
+```
+
+### 4. 虚拟滚动优化
+
+根据容器尺寸计算可见项目数量：
+
+```tsx
+import { useResizeObserver } from 'arrow-hooks'
+import { useRef, useState, useMemo } from 'react'
+
+function VirtualList({ items, itemHeight = 50 }: {
+  items: string[]
+  itemHeight?: number
+}) {
+  const listRef = useRef<HTMLDivElement>(null)
+  const [containerHeight, setContainerHeight] = useState(0)
+
+  useResizeObserver(listRef, (entry) => {
+    setContainerHeight(entry.contentRect.height)
+  })
+
+  const visibleCount = useMemo(() => {
+    return Math.ceil(containerHeight / itemHeight) + 2 // 额外渲染2项缓冲
+  }, [containerHeight, itemHeight])
+
+  return (
+    <div
+      ref={listRef}
+      style={{
+        height: '300px',
+        overflowY: 'auto',
+        border: '1px solid #e0e0e0',
+        borderRadius: '4px'
+      }}
+    >
+      {items.slice(0, visibleCount).map((item, index) => (
+        <div
+          key={index}
+          style={{
+            height: itemHeight,
+            padding: '0 1rem',
+            display: 'flex',
+            alignItems: 'center',
+            borderBottom: '1px solid #f0f0f0'
+          }}
+        >
+          {item}
+        </div>
+      ))}
+      <div style={{
+        padding: '0.5rem',
+        textAlign: 'center',
+        fontSize: '0.875rem',
+        color: '#666'
+      }}>
+        显示 {visibleCount} / {items.length} 项
+      </div>
+    </div>
+  )
+}
+```
+
+## API 参考
+
+### 参数
+
+| 参数 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| ref | RefObject\<T extends HTMLElement\> | - | 要监听的元素引用 |
+| callback | ResizeCallback | - | 尺寸变化时的回调函数 |
+| options | ResizeObserverOptions | undefined | 观察器配置选项 |
+
+### 回调函数类型
+
+```tsx
+type ResizeCallback = (entry: ResizeObserverEntry) => void
+```
+
+### ResizeObserverEntry 属性
+
+```tsx
+interface ResizeObserverEntry {
+  target: Element                    // 目标元素
+  contentRect: DOMRectReadOnly       // 内容区域尺寸
+  borderBoxSize: ResizeObserverSize  // 边框盒尺寸
+  contentBoxSize: ResizeObserverSize // 内容盒尺寸
+  devicePixelContentBoxSize: ResizeObserverSize // 设备像素内容盒尺寸
+}
+
+interface DOMRectReadOnly {
+  width: number   // 宽度
+  height: number  // 高度
+  x: number       // X 坐标
+  y: number       // Y 坐标
+  top: number     // 顶部距离
+  right: number   // 右侧距离
+  bottom: number  // 底部距离
+  left: number    // 左侧距离
+}
+```
+
+### 使用示例
+
+```tsx
+import { useResizeObserver } from 'arrow-hooks'
+
+// 基础用法
+useResizeObserver(elementRef, (entry) => {
+  console.log('尺寸变化:', entry.contentRect)
+})
+
+// 获取详细尺寸信息
+useResizeObserver(elementRef, (entry) => {
+  const { width, height } = entry.contentRect
+  const { x, y } = entry.contentRect
+
+  console.log(`尺寸: ${width} × ${height}`)
+  console.log(`位置: (${x}, ${y})`)
+})
+
+// 使用边框盒尺寸
+useResizeObserver(elementRef, (entry) => {
+  if (entry.borderBoxSize) {
+    const { inlineSize, blockSize } = entry.borderBoxSize[0]
+    console.log(`边框盒尺寸: ${inlineSize} × ${blockSize}`)
+  }
+})
+```
+
+## 注意事项
+
+- **浏览器兼容性**: 需要 ResizeObserver API 支持，现代浏览器均支持
+- **性能优化**: ResizeObserver 比监听 window resize 事件性能更好，只监听特定元素
+- **回调稳定性**: 建议将复杂的处理逻辑封装在 useCallback 中
+- **防抖考虑**: 对于频繁变化的场景，可以考虑在回调中添加防抖逻辑
+- **内存管理**: 组件卸载时会自动断开观察器连接
+- **尺寸信息**: contentRect 提供的是内容区域尺寸，不包括边框和滚动条
+- **初始化**: 组件挂载后会立即触发一次回调，获取初始尺寸

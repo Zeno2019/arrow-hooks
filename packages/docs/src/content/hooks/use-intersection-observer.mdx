@@ -1,0 +1,305 @@
+---
+title: useIntersectionObserver
+description: 用于监听元素可见性变化的 React Hook
+---
+
+import { IntersectionObserverExample } from '@/components/examples';
+
+# useIntersectionObserver
+
+用于监听元素可见性变化的 React Hook，基于 IntersectionObserver API，当元素进入或离开视口时执行回调函数，常用于懒加载、无限滚动、动画触发等场景。
+
+## 在线演示
+
+<IntersectionObserverExample />
+
+## 基本用法
+
+```tsx tab="React 函数组件"
+import { useIntersectionObserver } from 'arrow-hooks'
+import { useRef, useCallback, useState } from 'react'
+
+function App() {
+  const targetRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  const handleIntersect = useCallback((entries: IntersectionObserverEntry[]) => {
+    const entry = entries[0]
+    setIsVisible(entry.isIntersecting)
+  }, [])
+
+  useIntersectionObserver(targetRef, handleIntersect)
+
+  return (
+    <div>
+      <div ref={targetRef} style={{ height: '200px', backgroundColor: '#f0f0f0' }}>
+        观察目标元素
+      </div>
+      <p>元素状态: {isVisible ? '可见' : '不可见'}</p>
+    </div>
+  )
+}
+```
+
+## 使用场景
+
+### 1. 图片懒加载
+
+当图片进入视窗时才开始加载：
+
+```tsx
+import { useIntersectionObserver } from 'arrow-hooks'
+import { useRef, useCallback, useState } from 'react'
+
+function LazyImage({ src, alt }: { src: string; alt: string }) {
+  const imageRef = useRef<HTMLImageElement>(null)
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  const handleIntersect = useCallback((entries: IntersectionObserverEntry[]) => {
+    const entry = entries[0]
+
+    if (entry.isIntersecting && !isLoaded) {
+      if (imageRef.current) {
+        imageRef.current.src = src
+        setIsLoaded(true)
+      }
+    }
+  }, [src, isLoaded])
+
+  useIntersectionObserver(imageRef, handleIntersect)
+
+  return (
+    <img
+      ref={imageRef}
+      alt={alt}
+      style={{
+        width: '100%',
+        height: '300px',
+        backgroundColor: '#f0f0f0',
+        objectFit: 'cover'
+      }}
+    />
+  )
+}
+```
+
+### 2. 动画触发
+
+元素进入视窗时触发动画：
+
+```tsx
+import { useIntersectionObserver } from 'arrow-hooks'
+import { useRef, useCallback, useState } from 'react'
+
+function AnimatedCard({ children }: { children: React.ReactNode }) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  const handleIntersect = useCallback((entries: IntersectionObserverEntry[]) => {
+    const entry = entries[0]
+    setIsVisible(entry.isIntersecting)
+  }, [])
+
+  useIntersectionObserver(cardRef, handleIntersect, {
+    threshold: 0.3 // 元素30%可见时触发
+  })
+
+  return (
+    <div
+      ref={cardRef}
+      style={{
+        padding: '2rem',
+        borderRadius: '8px',
+        backgroundColor: 'white',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(50px) scale(0.9)',
+        opacity: isVisible ? 1 : 0,
+        transition: 'all 0.6s ease'
+      }}
+    >
+      {children}
+    </div>
+  )
+}
+```
+
+### 3. 数据统计
+
+统计元素的曝光时间：
+
+```tsx
+import { useIntersectionObserver } from 'arrow-hooks'
+import { useRef, useCallback, useState, useEffect } from 'react'
+
+function ExposureTracker({ onExposure }: { onExposure: (duration: number) => void }) {
+  const elementRef = useRef<HTMLDivElement>(null)
+  const [startTime, setStartTime] = useState<number | null>(null)
+
+  const handleIntersect = useCallback((entries: IntersectionObserverEntry[]) => {
+    const entry = entries[0]
+
+    if (entry.isIntersecting) {
+      setStartTime(Date.now())
+    } else if (startTime) {
+      const duration = Date.now() - startTime
+      onExposure(duration)
+      setStartTime(null)
+    }
+  }, [startTime, onExposure])
+
+  useIntersectionObserver(elementRef, handleIntersect)
+
+  return (
+    <div
+      ref={elementRef}
+      style={{
+        padding: '2rem',
+        backgroundColor: '#f0f8ff',
+        borderRadius: '8px',
+        textAlign: 'center'
+      }}
+    >
+      <h3>曝光统计区域</h3>
+      <p>进入和离开视窗时会记录曝光时长</p>
+    </div>
+  )
+}
+```
+
+### 4. 内容加载优化
+
+根据元素可见性决定是否渲染复杂内容：
+
+```tsx
+import { useIntersectionObserver } from 'arrow-hooks'
+import { useRef, useCallback, useState } from 'react'
+
+function OptimizedContent() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [shouldRender, setShouldRender] = useState(false)
+
+  const handleIntersect = useCallback((entries: IntersectionObserverEntry[]) => {
+    const entry = entries[0]
+    setShouldRender(entry.isIntersecting)
+  }, [])
+
+  useIntersectionObserver(containerRef, handleIntersect, {
+    freezeOnceVisible: true // 一旦可见就停止观察
+  })
+
+  return (
+    <div ref={containerRef} style={{ minHeight: '400px' }}>
+      {shouldRender ? (
+        <ExpensiveComponent />
+      ) : (
+        <div style={{
+          height: '400px',
+          backgroundColor: '#f5f5f5',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          内容准备中...
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ExpensiveComponent() {
+  // 复杂的组件逻辑
+  return (
+    <div>
+      <h3>复杂内容组件</h3>
+      {/* 大量的 DOM 元素或复杂计算 */}
+    </div>
+  )
+}
+```
+
+## API 参考
+
+### 参数
+
+| 参数 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| elementRef | RefObject\<Element\> | - | 要观察的元素引用 |
+| callback | IntersectionObserverCallback | - | 可见性变化时的回调函数 |
+| options | UseIntersectionObserverOptions | {} | 观察器配置选项 |
+
+### 返回值
+
+无返回值（void）
+
+### 配置选项
+
+```tsx
+interface UseIntersectionObserverOptions extends IntersectionObserverInit {
+  freezeOnceVisible?: boolean // 是否在元素首次进入视口时就停止观察
+}
+
+// IntersectionObserverInit 包含以下属性：
+interface IntersectionObserverInit {
+  root?: Element | null           // 根元素，默认为视口
+  rootMargin?: string            // 根边距，默认为 "0px"
+  threshold?: number | number[]  // 触发阈值，默认为 0
+}
+```
+
+### 回调函数参数
+
+```tsx
+type IntersectionObserverCallback = (
+  entries: IntersectionObserverEntry[],
+  observer: IntersectionObserver
+) => void
+
+// IntersectionObserverEntry 主要属性：
+interface IntersectionObserverEntry {
+  isIntersecting: boolean        // 是否正在相交
+  intersectionRatio: number      // 相交比例 (0-1)
+  target: Element               // 目标元素
+  time: number                  // 时间戳
+  boundingClientRect: DOMRectReadOnly  // 目标元素边界信息
+  rootBounds: DOMRectReadOnly   // 根元素边界信息
+  intersectionRect: DOMRectReadOnly    // 相交区域信息
+}
+```
+
+### 使用示例
+
+```tsx
+import { useIntersectionObserver } from 'arrow-hooks'
+
+// 基础用法
+useIntersectionObserver(elementRef, callback)
+
+// 设置触发阈值
+useIntersectionObserver(elementRef, callback, {
+  threshold: 0.5 // 50% 可见时触发
+})
+
+// 设置根边距
+useIntersectionObserver(elementRef, callback, {
+  rootMargin: '50px' // 提前50px触发
+})
+
+// 多个阈值
+useIntersectionObserver(elementRef, callback, {
+  threshold: [0, 0.25, 0.5, 0.75, 1] // 在多个可见度阈值触发
+})
+
+// 首次可见后停止观察
+useIntersectionObserver(elementRef, callback, {
+  freezeOnceVisible: true
+})
+```
+
+## 注意事项
+
+- **浏览器兼容性**: 需要 IntersectionObserver API 支持，现代浏览器均支持
+- **性能优化**: 相比传统的滚动监听，IntersectionObserver 性能更好
+- **冻结选项**: `freezeOnceVisible` 选项可以在元素首次可见后停止观察，适用于懒加载场景
+- **回调稳定性**: 建议使用 `useCallback` 包装回调函数，避免不必要的重新观察
+- **清理机制**: 组件卸载时会自动断开观察器连接
+- **阈值设置**: threshold 为 0 表示元素刚进入视口就触发，为 1 表示完全可见才触发

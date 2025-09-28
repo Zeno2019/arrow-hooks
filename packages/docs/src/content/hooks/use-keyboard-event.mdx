@@ -1,0 +1,448 @@
+---
+title: useKeyboardEvent
+description: 用于处理键盘事件的 React Hook
+---
+
+import { KeyboardEventExample } from '@/components/examples';
+
+# useKeyboardEvent
+
+用于处理键盘事件的 React Hook，基于 useEventListener 封装，提供简洁的 API 来监听键盘按键事件，支持特定按键过滤，常用于快捷键、游戏控制、表单导航等场景。
+
+## 在线演示
+
+<KeyboardEventExample />
+
+## 基本用法
+
+```tsx tab="React 函数组件"
+import { useKeyboardEvent } from 'arrow-hooks'
+import { useState } from 'react'
+
+function App() {
+  const [lastKey, setLastKey] = useState('')
+
+  // 监听所有按键
+  useKeyboardEvent('keydown', (e) => {
+    setLastKey(e.key)
+  })
+
+  return (
+    <div>
+      <p>按任意键: {lastKey}</p>
+    </div>
+  )
+}
+```
+
+## 使用场景
+
+### 1. 特定按键监听
+
+监听特定的按键事件：
+
+```tsx
+import { useKeyboardEvent } from 'arrow-hooks'
+import { useState } from 'react'
+
+function ShortcutExample() {
+  const [message, setMessage] = useState('')
+
+  // 监听 Escape 键
+  useKeyboardEvent('keydown', () => {
+    setMessage('按下了 ESC 键 - 清除操作')
+    setTimeout(() => setMessage(''), 2000)
+  }, 'Escape')
+
+  // 监听 Enter 键
+  useKeyboardEvent('keydown', () => {
+    setMessage('按下了 Enter 键 - 确认操作')
+    setTimeout(() => setMessage(''), 2000)
+  }, 'Enter')
+
+  // 监听空格键
+  useKeyboardEvent('keydown', () => {
+    setMessage('按下了空格键 - 播放/暂停')
+    setTimeout(() => setMessage(''), 2000)
+  }, ' ')
+
+  return (
+    <div style={{ padding: '2rem', textAlign: 'center' }}>
+      <h3>快捷键演示</h3>
+      <p>尝试按下 ESC、Enter 或空格键</p>
+      {message && (
+        <div style={{
+          padding: '1rem',
+          backgroundColor: '#e6f7ff',
+          borderRadius: '4px',
+          marginTop: '1rem'
+        }}>
+          {message}
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+### 2. 游戏控制
+
+实现游戏中的键盘控制：
+
+```tsx
+import { useKeyboardEvent } from 'arrow-hooks'
+import { useState } from 'react'
+
+function GameController() {
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isMoving, setIsMoving] = useState(false)
+
+  // 方向键控制
+  useKeyboardEvent('keydown', (e) => {
+    setIsMoving(true)
+    setPosition(prev => ({ ...prev, y: prev.y - 10 }))
+  }, 'ArrowUp')
+
+  useKeyboardEvent('keydown', (e) => {
+    setIsMoving(true)
+    setPosition(prev => ({ ...prev, y: prev.y + 10 }))
+  }, 'ArrowDown')
+
+  useKeyboardEvent('keydown', (e) => {
+    setIsMoving(true)
+    setPosition(prev => ({ ...prev, x: prev.x - 10 }))
+  }, 'ArrowLeft')
+
+  useKeyboardEvent('keydown', (e) => {
+    setIsMoving(true)
+    setPosition(prev => ({ ...prev, x: prev.x + 10 }))
+  }, 'ArrowRight')
+
+  // 监听按键释放
+  useKeyboardEvent('keyup', () => {
+    setIsMoving(false)
+  })
+
+  // 重置位置
+  useKeyboardEvent('keydown', () => {
+    setPosition({ x: 0, y: 0 })
+  }, 'r')
+
+  return (
+    <div style={{
+      position: 'relative',
+      width: '400px',
+      height: '300px',
+      border: '2px solid #333',
+      margin: '0 auto',
+      overflow: 'hidden'
+    }}>
+      <div
+        style={{
+          position: 'absolute',
+          width: '30px',
+          height: '30px',
+          backgroundColor: isMoving ? '#ff4757' : '#2ed573',
+          borderRadius: '50%',
+          transition: 'background-color 0.2s',
+          transform: `translate(${position.x + 185}px, ${position.y + 135}px)`
+        }}
+      />
+      <div style={{
+        position: 'absolute',
+        bottom: '10px',
+        left: '10px',
+        fontSize: '0.875rem',
+        color: '#666'
+      }}>
+        使用方向键移动，R键重置
+      </div>
+    </div>
+  )
+}
+```
+
+### 3. 表单导航
+
+实现表单的键盘导航：
+
+```tsx
+import { useKeyboardEvent } from 'arrow-hooks'
+import { useRef, useState } from 'react'
+
+function FormNavigation() {
+  const [currentField, setCurrentField] = useState(0)
+  const formRef = useRef<HTMLFormElement>(null)
+
+  const fields = ['name', 'email', 'phone', 'message']
+
+  // Tab 键导航
+  useKeyboardEvent('keydown', (e) => {
+    e.preventDefault()
+    setCurrentField(prev => (prev + 1) % fields.length)
+  }, 'Tab')
+
+  // Shift+Tab 反向导航
+  useKeyboardEvent('keydown', (e) => {
+    if (e.shiftKey && e.key === 'Tab') {
+      e.preventDefault()
+      setCurrentField(prev => prev === 0 ? fields.length - 1 : prev - 1)
+    }
+  })
+
+  // Enter 提交表单
+  useKeyboardEvent('keydown', (e) => {
+    if (formRef.current) {
+      e.preventDefault()
+      console.log('表单提交')
+    }
+  }, 'Enter')
+
+  return (
+    <form ref={formRef} style={{ maxWidth: '400px', margin: '0 auto' }}>
+      <h3>键盘导航表单</h3>
+      <p style={{ fontSize: '0.875rem', color: '#666' }}>
+        使用 Tab/Shift+Tab 导航，Enter 提交
+      </p>
+
+      {fields.map((field, index) => (
+        <div key={field} style={{ marginBottom: '1rem' }}>
+          <label style={{
+            display: 'block',
+            marginBottom: '0.5rem',
+            fontWeight: currentField === index ? 'bold' : 'normal',
+            color: currentField === index ? '#1890ff' : '#333'
+          }}>
+            {field.charAt(0).toUpperCase() + field.slice(1)}:
+          </label>
+          {field === 'message' ? (
+            <textarea
+              style={{
+                width: '100%',
+                padding: '0.5rem',
+                border: `2px solid ${currentField === index ? '#1890ff' : '#d9d9d9'}`,
+                borderRadius: '4px',
+                outline: 'none'
+              }}
+              rows={3}
+            />
+          ) : (
+            <input
+              type={field === 'email' ? 'email' : 'text'}
+              style={{
+                width: '100%',
+                padding: '0.5rem',
+                border: `2px solid ${currentField === index ? '#1890ff' : '#d9d9d9'}`,
+                borderRadius: '4px',
+                outline: 'none'
+              }}
+            />
+          )}
+        </div>
+      ))}
+
+      <div style={{
+        padding: '1rem',
+        backgroundColor: '#f0f8ff',
+        borderRadius: '4px',
+        fontSize: '0.875rem'
+      }}>
+        当前焦点: {fields[currentField]}
+      </div>
+    </form>
+  )
+}
+```
+
+### 4. 快捷键组合
+
+实现复杂的键盘快捷键组合：
+
+```tsx
+import { useKeyboardEvent } from 'arrow-hooks'
+import { useState, useEffect } from 'react'
+
+function ShortcutManager() {
+  const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set())
+  const [lastShortcut, setLastShortcut] = useState('')
+
+  // 记录按下的键
+  useKeyboardEvent('keydown', (e) => {
+    setPressedKeys(prev => new Set([...prev, e.key]))
+  })
+
+  // 记录释放的键
+  useKeyboardEvent('keyup', (e) => {
+    setPressedKeys(prev => {
+      const newSet = new Set(prev)
+      newSet.delete(e.key)
+      return newSet
+    })
+  })
+
+  // 检查快捷键组合
+  useEffect(() => {
+    const keys = Array.from(pressedKeys).sort().join('+')
+
+    if (keys === 'Control+s') {
+      setLastShortcut('保存 (Ctrl+S)')
+    } else if (keys === 'Control+z') {
+      setLastShortcut('撤销 (Ctrl+Z)')
+    } else if (keys === 'Control+y') {
+      setLastShortcut('重做 (Ctrl+Y)')
+    } else if (keys === 'Control+c') {
+      setLastShortcut('复制 (Ctrl+C)')
+    } else if (keys === 'Control+v') {
+      setLastShortcut('粘贴 (Ctrl+V)')
+    }
+  }, [pressedKeys])
+
+  return (
+    <div style={{ padding: '2rem', textAlign: 'center' }}>
+      <h3>快捷键管理器</h3>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <strong>当前按下的键:</strong>
+        <div style={{
+          padding: '1rem',
+          backgroundColor: '#f5f5f5',
+          borderRadius: '4px',
+          marginTop: '0.5rem',
+          minHeight: '2rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.5rem'
+        }}>
+          {pressedKeys.size === 0 ? (
+            <span style={{ color: '#999' }}>无</span>
+          ) : (
+            Array.from(pressedKeys).map(key => (
+              <span key={key} style={{
+                padding: '0.25rem 0.5rem',
+                backgroundColor: '#1890ff',
+                color: 'white',
+                borderRadius: '4px',
+                fontSize: '0.875rem'
+              }}>
+                {key}
+              </span>
+            ))
+          )}
+        </div>
+      </div>
+
+      {lastShortcut && (
+        <div style={{
+          padding: '1rem',
+          backgroundColor: '#e6f7ff',
+          borderRadius: '4px',
+          marginBottom: '1rem'
+        }}>
+          <strong>执行快捷键:</strong> {lastShortcut}
+        </div>
+      )}
+
+      <div style={{
+        fontSize: '0.875rem',
+        color: '#666',
+        textAlign: 'left',
+        maxWidth: '300px',
+        margin: '0 auto'
+      }}>
+        <strong>支持的快捷键:</strong>
+        <ul>
+          <li>Ctrl+S - 保存</li>
+          <li>Ctrl+Z - 撤销</li>
+          <li>Ctrl+Y - 重做</li>
+          <li>Ctrl+C - 复制</li>
+          <li>Ctrl+V - 粘贴</li>
+        </ul>
+      </div>
+    </div>
+  )
+}
+```
+
+## API 参考
+
+### 参数
+
+| 参数 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| eventType | KeyboardEventType | - | 键盘事件类型 |
+| handler | (event: KeyboardEvent) => void | - | 事件处理函数 |
+| targetKey | string | undefined | 可选的特定按键过滤 |
+
+### 事件类型
+
+```tsx
+type KeyboardEventType = 'keydown' | 'keyup' | 'keypress'
+```
+
+### 使用示例
+
+```tsx
+import { useKeyboardEvent } from 'arrow-hooks'
+
+// 监听所有按键
+useKeyboardEvent('keydown', (e) => {
+  console.log('按下:', e.key)
+})
+
+// 监听特定按键
+useKeyboardEvent('keydown', () => {
+  console.log('按下了空格键')
+}, ' ')
+
+// 监听按键释放
+useKeyboardEvent('keyup', (e) => {
+  console.log('释放:', e.key)
+})
+
+// 监听 keypress 事件（主要用于字符输入）
+useKeyboardEvent('keypress', (e) => {
+  console.log('字符输入:', e.key)
+})
+```
+
+### 常用按键值
+
+```tsx
+// 特殊键
+'Escape'     // ESC 键
+'Enter'      // 回车键
+'Tab'        // Tab 键
+'Backspace'  // 退格键
+'Delete'     // 删除键
+' '          // 空格键
+
+// 方向键
+'ArrowUp'    // 上方向键
+'ArrowDown'  // 下方向键
+'ArrowLeft'  // 左方向键
+'ArrowRight' // 右方向键
+
+// 修饰键
+'Control'    // Ctrl 键
+'Shift'      // Shift 键
+'Alt'        // Alt 键
+'Meta'       // Windows 键/Cmd 键
+
+// 字母和数字
+'a', 'b', 'c'...  // 字母键
+'1', '2', '3'...  // 数字键
+
+// 功能键
+'F1', 'F2', 'F3'...  // 功能键
+```
+
+## 注意事项
+
+- **事件冒泡**: 键盘事件会冒泡，可能被多个监听器捕获
+- **修饰键检测**: 可以通过 `event.ctrlKey`、`event.shiftKey` 等属性检测修饰键状态
+- **防止默认行为**: 在需要时使用 `event.preventDefault()` 阻止浏览器默认行为
+- **性能考虑**: 对于高频键盘事件，建议使用防抖或节流
+- **键值标准化**: 不同浏览器和系统的键值可能略有差异
+- **焦点依赖**: 键盘事件通常需要页面或元素具有焦点才能触发
+- **组合键处理**: 复杂的组合键需要结合按键状态管理来实现
