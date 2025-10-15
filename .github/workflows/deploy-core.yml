@@ -23,14 +23,11 @@ jobs:
         id: check
         run: |
           current_version=$(node -p "require('./packages/core/package.json').version")
-
           git checkout HEAD~1 -- packages/core/package.json 2>/dev/null || echo "First commit"
           previous_version=$(node -p "require('./packages/core/package.json').version" 2>/dev/null || echo "0.0.0")
           git checkout HEAD -- packages/core/package.json
-
           echo "Previous version: $previous_version"
           echo "Current version: $current_version"
-
           if [ "$current_version" != "$previous_version" ]; then
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "version=$current_version" >> $GITHUB_OUTPUT
@@ -44,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write
+      id-token: write # <-- required for npm provenance
     steps:
       - uses: actions/checkout@v4
 
@@ -53,15 +50,23 @@ jobs:
         with:
           version: 9
 
-      - name: Setup Node.js
+      - name: Setup Node.js (with npm provenance)
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "pnpm"
           registry-url: "https://registry.npmjs.org"
+          cache: "pnpm"
+          # provenance support (GitHub Actions -> npm linkage)
+          always-auth: true
+
+      - name: Create .npmrc
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+          echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
+          echo "access=public" >> ~/.npmrc
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Type Check
         run: pnpm --filter arrow-hooks --if-present type-check
@@ -73,7 +78,12 @@ jobs:
         run: pnpm --filter arrow-hooks --if-present build
 
       - name: Publish to npm
-        run: cd packages/core && npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+        run: |
+          cd packages/core
+          npm pkg fix # auto-corrects metadata
+          npm publish --provenance --access public
 
       - name: Create Git Tag
         run: |
