@@ -74,8 +74,6 @@ jobs:
 
       - name: Publish to npm
         run: cd packages/core && npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create Git Tag
         run: |
