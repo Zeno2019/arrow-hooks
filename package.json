@@ -1,6 +1,17 @@
 {
   "name": "arrow-hooks",
   "private": true,
+  "pnpm": {
+    "overrides": {
+      "next": "15.5.9",
+      "@vitejs/plugin-rsc": "0.5.9",
+      "hono": "4.11.3",
+      "js-yaml": "4.1.1",
+      "mdast-util-to-hast": "13.2.1",
+      "react-server-dom-webpack": "19.1.4",
+      "vite": "7.1.11"
+    }
+  },
   "scripts": {
     "dev": "pnpm --filter @arrow-hooks/docs dev",
     "build:core": "pnpm --filter arrow-hooks build",
