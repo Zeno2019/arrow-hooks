@@ -1,0 +1,41 @@
+---
+title: useIndexedDBClient
+description: 用于 IndexedDB 通用 KV Client 的 React Hook（更偏高级用法）
+---
+
+import { IndexedDBClientExample } from '@/components/examples';
+
+# useIndexedDBClient
+
+返回一个 IndexedDB 通用 KV client，适合批量操作（`keys/clear`）、自定义订阅等更高级场景。
+
+## 在线演示
+
+<IndexedDBClientExample />
+
+## 基本用法
+
+```tsx tab="React 函数组件"
+import { useIndexedDBClient } from 'arrow-hooks'
+
+function App() {
+  const client = useIndexedDBClient()
+
+  const write = async () => {
+    await client.set('k', { a: 1 })
+  }
+
+  return <button onClick={write}>写入</button>
+}
+```
+
+## API 参考（简要）
+
+- `client.get<T>(key): Promise<T | undefined>`
+- `client.set<T>(key, value): Promise<void>`
+- `client.delete(key): Promise<void>`
+- `client.clear(): Promise<void>`
+- `client.keys(): Promise<IDBValidKey[]>`
+- `client.subscribe((event) => void): () => void`
+- `client.subscribeKey(key, (event) => void): () => void`
+

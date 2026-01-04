@@ -62,6 +62,16 @@ export const pageTree: PageTree.Root = {
       children: [
         {
           type: 'page',
+          name: 'useIndexedDB',
+          url: '/hooks/use-indexeddb',
+        },
+        {
+          type: 'page',
+          name: 'useIndexedDBClient',
+          url: '/hooks/use-indexeddb-client',
+        },
+        {
+          type: 'page',
           name: 'useCookie',
           url: '/hooks/use-cookie',
         },

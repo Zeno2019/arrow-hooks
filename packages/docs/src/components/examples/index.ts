@@ -6,6 +6,8 @@
 // Hook 示例组件(Live Demo)
 export { EventListenerExample } from './event-listener-example';
 export { HoverExample } from './hover-example';
+export { IndexedDBClientExample } from './indexeddb-client-example';
+export { IndexedDBExample } from './indexeddb-example';
 export { InfiniteScrollExample } from './infinite-scroll-example';
 export { IntersectionObserverExample } from './intersection-observer-example';
 export { KeyboardEventExample } from './keyboard-event-example';

@@ -1,8 +1,3 @@
-export const isBrowser =
-  typeof window !== 'undefined' &&
-  typeof navigator !== 'undefined' &&
-  typeof document !== 'undefined';
-
 // biome-ignore lint/suspicious/noExplicitAny: Generic callback signature for debounce.
 type Procedure = (...args: any[]) => void;
 
