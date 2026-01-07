@@ -7,15 +7,17 @@ describe('useIntersectionObserver', () => {
   let mockIntersectionObserver: Mock;
 
   beforeAll(() => {
-    mockIntersectionObserver = vi.fn((callback) => ({
-      observe: vi.fn(),
-      disconnect: vi.fn(),
-      unobserve: vi.fn(),
-      root: null,
-      rootMargin: '',
-      thresholds: [],
-      takeRecords: vi.fn(),
-    }));
+    mockIntersectionObserver = vi.fn(function (callback) {
+      return {
+        observe: vi.fn(),
+        disconnect: vi.fn(),
+        unobserve: vi.fn(),
+        root: null,
+        rootMargin: '',
+        thresholds: [],
+        takeRecords: vi.fn(),
+      };
+    });
 
     vi.stubGlobal('IntersectionObserver', mockIntersectionObserver);
   });

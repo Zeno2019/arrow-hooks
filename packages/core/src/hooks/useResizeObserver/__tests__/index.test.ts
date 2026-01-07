@@ -7,11 +7,13 @@ describe('useResizeObserver', () => {
   let mockResizeObserver: Mock;
 
   beforeAll(() => {
-    mockResizeObserver = vi.fn((callback) => ({
-      observe: vi.fn(),
-      disconnect: vi.fn(),
-      unobserve: vi.fn(),
-    }));
+    mockResizeObserver = vi.fn(function (callback) {
+      return {
+        observe: vi.fn(),
+        disconnect: vi.fn(),
+        unobserve: vi.fn(),
+      };
+    });
 
     // 在 vitest 环境中设置 mock
     window.ResizeObserver = mockResizeObserver;

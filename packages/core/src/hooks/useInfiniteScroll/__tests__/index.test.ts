@@ -26,15 +26,17 @@ describe('useInfiniteScroll', () => {
   });
 
   beforeAll(() => {
-    mockIntersectionObserver = vi.fn((callback) => ({
-      observe: vi.fn(),
-      disconnect: vi.fn(),
-      unobserve: vi.fn(),
-      root: null,
-      rootMargin: '',
-      thresholds: [],
-      takeRecords: vi.fn(),
-    }));
+    mockIntersectionObserver = vi.fn(function (callback) {
+      return {
+        observe: vi.fn(),
+        disconnect: vi.fn(),
+        unobserve: vi.fn(),
+        root: null,
+        rootMargin: '',
+        thresholds: [],
+        takeRecords: vi.fn(),
+      };
+    });
 
     vi.stubGlobal('IntersectionObserver', mockIntersectionObserver);
   });
@@ -93,7 +95,7 @@ describe('useInfiniteScroll', () => {
     const onLoadMore = vi.fn().mockResolvedValue(undefined);
     let intersectionCallback: IntersectionObserverCallback;
 
-    mockIntersectionObserver.mockImplementation((callback) => {
+    mockIntersectionObserver.mockImplementation(function (callback) {
       intersectionCallback = callback;
       return {
         observe: vi.fn(),
@@ -150,7 +152,7 @@ describe('useInfiniteScroll', () => {
     const onLoadMore = vi.fn();
 
     let intersectionCallback: IntersectionObserverCallback;
-    mockIntersectionObserver.mockImplementation((callback) => {
+    mockIntersectionObserver.mockImplementation(function (callback) {
       intersectionCallback = callback;
       return {
         observe: vi.fn(),
@@ -186,7 +188,7 @@ describe('useInfiniteScroll', () => {
     const onLoadMore = vi.fn();
 
     let intersectionCallback: IntersectionObserverCallback;
-    mockIntersectionObserver.mockImplementation((callback) => {
+    mockIntersectionObserver.mockImplementation(function (callback) {
       intersectionCallback = callback;
       return {
         observe: vi.fn(),
